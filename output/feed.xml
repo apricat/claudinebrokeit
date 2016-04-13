@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>JBake</title>
+    <link>http://claudinebroke.it</link>
+    <atom:link href="http://claudinebroke.it/feed.xml" rel="self" type="application/rss+xml" />
+    <description>JBake Bootstrap Template</description>
+    <language>en-gb</language>
+    <pubDate>Wed, 13 Apr 2016 01:49:40 +0000</pubDate>
+    <lastBuildDate>Wed, 13 Apr 2016 01:49:40 +0000</lastBuildDate>
+
+    <item>
+      <title>Animating Petit Workout</title>
+      <link>http://claudinebroke.it/blog/2016/graphics.html</link>
+      <pubDate>Sat, 9 Apr 2016 00:00:00 +0000</pubDate>
+      <guid isPermaLink="false">blog/2016/graphics.html</guid>
+      	<description>
+	&lt;p&gt;Last blog post we used a well know java thread pattern, the Producer-Consumer pattern, to create a small workout application.&lt;/p&gt;
+	</description>
+    </item>
+    <item>
+      <title>Petit Workout Queue</title>
+      <link>http://claudinebroke.it/blog/2016/petitworkout.html</link>
+      <pubDate>Thu, 24 Mar 2016 00:00:00 +0000</pubDate>
+      <guid isPermaLink="false">blog/2016/petitworkout.html</guid>
+      	<description>
+	&lt;p&gt;Snow is clearing out, maple syrup is flowing, and the birds are coming back; spring is finally here! This means I&apos;ll soon be back on my bike exploring all the amazing land accessible on two wheels - yay! I can&apos;t even count how many how many boring hours I&apos;ve spent on my stationary bike this winter trying to maintain my stamina, cardio and muscle. Now&apos;s the time to kick it up a notch, though, and maximize all these remaining living room workouts in order to be in the best shape possible when I hit the streets.&lt;/p&gt;&lt;p&gt;A great way to maximize workouts is to do interval training, i.e. executing series of exercises at difference intensity levels. I tried doing so using my phone&apos;s stopwatch, but sweat and phone don&apos;t match too well. Besides, how else was I going to learn Java? So I started building my own little workout application.&lt;/p&gt;&lt;h3&gt;Petit Workout&lt;/h3&gt;&lt;p&gt;The way our workouts (yes, now it is -our- workout) are to be structured is quite easy; each &lt;em&gt;workout&lt;/em&gt; contains a series of &lt;em&gt;intervals&lt;/em&gt; at specific &lt;em&gt;intensity&lt;/em&gt;. &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Workout example #1
+
++----+-----------+-----------+
+|    |  Duration | Intensity |
++----+-----------+-----------+
+|  0 |      6000 | &amp;quot;easy&amp;quot;    |
+|  1 |      1000 | &amp;quot;hard&amp;quot;    |
+|  2 |      3000 | &amp;quot;easy&amp;quot;    |
++----+-----------+-----------+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If we are to focus on the individual intervals, we get objects like the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;public class Interval {
+
+    private String intensity;
+    private long duration;
+
+    public Interval(String intensity, long duration) 
+    {
+        this.intensity = intensity;
+        this.duration  = duration;
+    }
+
+    @Override
+    public String toString() 
+    {
+        return &amp;quot;Interval{&amp;quot; +
+            &amp;quot;intensity=&amp;#39;&amp;quot; + intensity + &amp;#39;\&amp;#39;&amp;#39; +
+            &amp;quot;, duration=&amp;quot; + duration +
+            &amp;#39;}&amp;#39;;
+    }
+
+    public String getIntensity() 
+    {
+        return intensity;
+    }
+
+    public long getDuration() 
+    {
+        return duration;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;As you can see, our &lt;code&gt;Interval&lt;/code&gt; object is a quite basic data struture with getters to retrieve the &lt;code&gt;intensity&lt;/code&gt; and &lt;code&gt;duration&lt;/code&gt; of our &lt;code&gt;Interval&lt;/code&gt; when needed. For our current iteration of the project, we&apos;re also implementing an &lt;code&gt;@Override&lt;/code&gt; of the &lt;code&gt;Object&lt;/code&gt; &lt;code&gt;toString()&lt;/code&gt; method to cleanly format output during tests. Note that in Java, every class has the &lt;code&gt;Object&lt;/code&gt; class as a superclass, all objects implement the methods of this class, including &lt;code&gt;toString()&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;Now back to our &lt;em&gt;series&lt;/em&gt;; one concept to extract from the table provided above is that we are effectively wanting to build a &lt;code&gt;Collection&lt;/code&gt; of &lt;code&gt;intervals&lt;/code&gt;. From the Java Api documentation: &lt;/p&gt;
+&lt;blockquote&gt;&lt;p&gt;A collection represents a group of objects, known as its elements.&lt;/p&gt;
+&lt;/blockquote&gt;&lt;p&gt;That&apos;s pretty abstract, but also on point; a &lt;code&gt;Collection&lt;/code&gt; is a &lt;code&gt;group&lt;/code&gt; of &lt;code&gt;objects&lt;/code&gt;. Defining an abstract concept allows us to narrow down on specific implementations that may better meet our application needs. In this case, &lt;code&gt;Queues&lt;/code&gt;, which implement the &lt;code&gt;Collection&lt;/code&gt; interface, seeem to fit the bill as they order elements in a FIFO (first-in-first-out) manner -- &lt;em&gt;note that there are some exceptions to this ordering, like &lt;code&gt;Priority queues&lt;/code&gt;, which we won&apos;t discuss as this is outside our project&apos;s scope&lt;/em&gt;. &lt;/p&gt;&lt;p&gt;In this little workout sequencing application, once an interval has terminated its execution, i.e. when its fulfilled its duration time, the application needs to initiate the next interval available in the queue.&lt;/p&gt;&lt;h3&gt;Queue&lt;/h3&gt;&lt;p&gt;There are many types of queuing patterns available through the Java API &lt;code&gt;Collection&lt;/code&gt; interface. One of these concrete implementations is the &lt;code&gt;LinkedList&lt;/code&gt;, which can be used to store and retrieve elements in a list&lt;/p&gt;
+&lt;blockquote&gt;&lt;p&gt;Note that Arrays, in Java, are reserved for primative types like integers, doubles, booleans, etc. and not objects, which include strings.&lt;/p&gt;
+&lt;/blockquote&gt;&lt;p&gt;Here is an example of how we can use a &lt;code&gt;LikedList&lt;/code&gt; as a &lt;code&gt;Queue&lt;/code&gt; to generate our workout:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import java.util.LinkedList;
+
+public class Queue {
+    private LinkedList&amp;lt;Interval&amp;gt; intervalQueue = new LinkedList&amp;lt;&amp;gt;();
+
+    public synchronized void put(Interval interval)
+    {
+        System.out.println(&amp;quot;Queuing: &amp;quot; + interval);
+
+        intervalQueue.addLast(interval);
+        notifyAll();
+    }
+
+    public synchronized Interval take()
+    {
+        while (intervalQueue.size() == 0)
+        {
+            try
+            {
+                wait();
+            }
+            catch (InterruptedException e) {}
+        }
+        return intervalQueue.removeFirst();
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Three important concepts to extract from this class are that:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;p&gt;Interacting with a &lt;code&gt;LinkedList&lt;/code&gt; implementation that contains &lt;code&gt;Interval&lt;/code&gt; objects (&lt;code&gt;LinkedList&amp;lt;Interval&amp;gt;&lt;/code&gt;) effectively guarantees that we can call the &lt;code&gt;getDuration&lt;/code&gt; and &lt;code&gt;getIntensity&lt;/code&gt; methods on the queue&apos;s &lt;code&gt;take&lt;/code&gt; return object.&lt;/p&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;p&gt;As we are going to implement multiple threads in our application, we need to assure no &lt;code&gt;concurrency issues&lt;/code&gt; arise. Since the &lt;code&gt;LinkedList&lt;/code&gt; implementation supplied by the Java Api is not &lt;code&gt;synchronized&lt;/code&gt;, we may face conflicts if more than one thread attempts to access the list at the same time. The &lt;code&gt;synchronized&lt;/code&gt; keyword tells the Java Virtual Machine to &lt;em&gt;lock&lt;/em&gt; an object while it is being accessed by a thread, and to persist this &lt;em&gt;lock&lt;/em&gt; until the first thread is finished with the object.&lt;/p&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;p&gt;A thread attempting to extract a value from the queue while the latter is empty will &lt;code&gt;wait&lt;/code&gt; until an item is added. Also, when the thread attempting to remove an item from the buffer, it notifies other threads to let them know a new element is available for processing.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;p&gt;Now to interact with our queue! We need methods that &lt;code&gt;put&lt;/code&gt; and &lt;code&gt;take&lt;/code&gt; items to-and-from the list. There&apos;s actually a well know pattern for that: the &lt;code&gt;Producer-Consumer&lt;/code&gt; pattern. &lt;/p&gt;&lt;p&gt;From Wikipedia:&lt;/p&gt;
+&lt;blockquote&gt;&lt;p&gt;The [Producer-Consumer] problem describes two processes [...] who share a common, fixed-size buffer used as a queue. The producer&apos;s job is to generate a piece of data, put it into the buffer and start again. At the same time, the consumer is consuming the data (i.e., removing it from the buffer) one piece at a time. The problem is to make sure that the producer won&apos;t try to add data into the buffer if it&apos;s full and that the consumer won&apos;t try to remove data from an empty buffer.&lt;/p&gt;
+&lt;/blockquote&gt;&lt;p&gt;In other words, a &lt;em&gt;Producer&lt;/em&gt; is a &lt;code&gt;thread&lt;/code&gt; that produces new objects intended to be inserted into a queue, and a &lt;em&gt;Consumer&lt;/em&gt; is the &lt;code&gt;thread&lt;/code&gt; that processes the queued objects.&lt;/p&gt;&lt;h3&gt;Producer&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;public class Producer implements Runnable {
+
+    protected Queue queue;
+
+    public Producer(Queue queue) {
+        this.queue = queue;
+    }
+
+    public void run() {
+        queue.put(new Interval(&amp;quot;easy&amp;quot;, 6000));
+        queue.put(new Interval(&amp;quot;hard&amp;quot;, 1000));
+        queue.put(new Interval(&amp;quot;easy&amp;quot;, 3000));
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3&gt;Consumer&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;public class Consumer implements Runnable {
+
+    protected Queue queue;
+
+    public Consumer(Queue queue) {
+        this.queue = queue;
+    }
+
+    public void run() {
+        while (true) { consume(queue.take()); }
+    }
+
+    void consume(Interval x) {
+        System.out.println(&amp;quot;Pulling: &amp;quot; + x);
+        try {
+            Thread.sleep(x.getDuration());
+        }
+        catch (InterruptedException e) {}
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;** note the dependency injection of the &lt;code&gt;queue&lt;/code&gt; thread upon the &lt;code&gt;Producer&lt;/code&gt; and &lt;code&gt;Consumer&lt;/code&gt; objects. This is how the two classes communicate with each other.&lt;/p&gt;&lt;h3&gt;Testing&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;public class QueueTest {
+
+    public static void main(String[] args) throws Exception {
+
+        Queue queue = new Queue();
+
+        Producer producer = new Producer(queue);
+        Consumer consumer = new Consumer(queue);
+
+        new Thread(producer).start();
+        new Thread(consumer).start();
+
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;As you can see, this is a pretty rudamentary implementation. The &lt;code&gt;Producer&lt;/code&gt; class places elements unto the queue, which the &lt;code&gt;Consumer&lt;/code&gt; &quot;takes&quot; out of the queue. The &lt;code&gt;Consumer&lt;/code&gt; does not take subsequent &lt;code&gt;Interval&lt;/code&gt; objects until it has terminated a &lt;code&gt;sleep()&lt;/code&gt; method with a duration &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Queuing: Interval{intensity=&amp;#39;easy&amp;#39;, duration=6000}
+Queuing: Interval{intensity=&amp;#39;hard&amp;#39;, duration=1000}
+Queuing: Interval{intensity=&amp;#39;easy&amp;#39;, duration=3000}
+Pulling: Interval{intensity=&amp;#39;easy&amp;#39;, duration=6000}
+Pulling: Interval{intensity=&amp;#39;hard&amp;#39;, duration=1000}
+Pulling: Interval{intensity=&amp;#39;easy&amp;#39;, duration=3000}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And that&apos;s that! Next up we will try to add a fun GUI :)&lt;/p&gt;
+	</description>
+    </item>
+
+  </channel> 
+</rss>

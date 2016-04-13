@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Petit Workout Queue</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="generator" content="claudinebroke.it">
+
+    <!-- Le styles -->
+    <!--<link href="../../css/bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="../../css/asciidoctor.css" rel="stylesheet">-->
+    <link href="../../css/base.css" rel="stylesheet">
+    <link href="../../css/prettify.css" rel="stylesheet">
+
+    <link href='https://fonts.googleapis.com/css?family=Work+Sans:300|Open+Sans|Lora:400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="../../favicon.ico">
+
+  </head>
+  <body onload="prettyPrint()" class="blog">
+    <div id="container">	
+<nav>
+  <ul class="list--lg list--dark list--inline">
+    <li><a href="index.html" class="highlight--underline">Home</a></li>
+    <li><a href="archive.html" class="highlight--underline">Archives</a></li>
+    <li><a href="about.html" class="highlight--underline">About</a></li>
+  </ul>
+</nav>	
+	<div class="page-header">
+		<h1>Petit Workout Queue</h1>
+	</div>
+
+	<p><em>24 March 2016</em></p>
+
+	<p><p>Snow is clearing out, maple syrup is flowing, and the birds are coming back; spring is finally here! This means I'll soon be back on my bike exploring all the amazing land accessible on two wheels - yay! I can't even count how many how many boring hours I've spent on my stationary bike this winter trying to maintain my stamina, cardio and muscle. Now's the time to kick it up a notch, though, and maximize all these remaining living room workouts in order to be in the best shape possible when I hit the streets.</p><p>A great way to maximize workouts is to do interval training, i.e. executing series of exercises at difference intensity levels. I tried doing so using my phone's stopwatch, but sweat and phone don't match too well. Besides, how else was I going to learn Java? So I started building my own little workout application.</p><h3>Petit Workout</h3><p>The way our workouts (yes, now it is -our- workout) are to be structured is quite easy; each <em>workout</em> contains a series of <em>intervals</em> at specific <em>intensity</em>. </p>
+<pre><code>Workout example #1
+
++----+-----------+-----------+
+|    |  Duration | Intensity |
++----+-----------+-----------+
+|  0 |      6000 | &quot;easy&quot;    |
+|  1 |      1000 | &quot;hard&quot;    |
+|  2 |      3000 | &quot;easy&quot;    |
++----+-----------+-----------+
+</code></pre><p>If we are to focus on the individual intervals, we get objects like the following:</p>
+<pre><code>public class Interval {
+
+    private String intensity;
+    private long duration;
+
+    public Interval(String intensity, long duration) 
+    {
+        this.intensity = intensity;
+        this.duration  = duration;
+    }
+
+    @Override
+    public String toString() 
+    {
+        return &quot;Interval{&quot; +
+            &quot;intensity=&#39;&quot; + intensity + &#39;\&#39;&#39; +
+            &quot;, duration=&quot; + duration +
+            &#39;}&#39;;
+    }
+
+    public String getIntensity() 
+    {
+        return intensity;
+    }
+
+    public long getDuration() 
+    {
+        return duration;
+    }
+}
+</code></pre><p>As you can see, our <code>Interval</code> object is a quite basic data struture with getters to retrieve the <code>intensity</code> and <code>duration</code> of our <code>Interval</code> when needed. For our current iteration of the project, we're also implementing an <code>@Override</code> of the <code>Object</code> <code>toString()</code> method to cleanly format output during tests. Note that in Java, every class has the <code>Object</code> class as a superclass, all objects implement the methods of this class, including <code>toString()</code>.</p><p>Now back to our <em>series</em>; one concept to extract from the table provided above is that we are effectively wanting to build a <code>Collection</code> of <code>intervals</code>. From the Java Api documentation: </p>
+<blockquote><p>A collection represents a group of objects, known as its elements.</p>
+</blockquote><p>That's pretty abstract, but also on point; a <code>Collection</code> is a <code>group</code> of <code>objects</code>. Defining an abstract concept allows us to narrow down on specific implementations that may better meet our application needs. In this case, <code>Queues</code>, which implement the <code>Collection</code> interface, seeem to fit the bill as they order elements in a FIFO (first-in-first-out) manner -- <em>note that there are some exceptions to this ordering, like <code>Priority queues</code>, which we won't discuss as this is outside our project's scope</em>. </p><p>In this little workout sequencing application, once an interval has terminated its execution, i.e. when its fulfilled its duration time, the application needs to initiate the next interval available in the queue.</p><h3>Queue</h3><p>There are many types of queuing patterns available through the Java API <code>Collection</code> interface. One of these concrete implementations is the <code>LinkedList</code>, which can be used to store and retrieve elements in a list</p>
+<blockquote><p>Note that Arrays, in Java, are reserved for primative types like integers, doubles, booleans, etc. and not objects, which include strings.</p>
+</blockquote><p>Here is an example of how we can use a <code>LikedList</code> as a <code>Queue</code> to generate our workout:</p>
+<pre><code>import java.util.LinkedList;
+
+public class Queue {
+    private LinkedList&lt;Interval&gt; intervalQueue = new LinkedList&lt;&gt;();
+
+    public synchronized void put(Interval interval)
+    {
+        System.out.println(&quot;Queuing: &quot; + interval);
+
+        intervalQueue.addLast(interval);
+        notifyAll();
+    }
+
+    public synchronized Interval take()
+    {
+        while (intervalQueue.size() == 0)
+        {
+            try
+            {
+                wait();
+            }
+            catch (InterruptedException e) {}
+        }
+        return intervalQueue.removeFirst();
+    }
+}
+</code></pre><p>Three important concepts to extract from this class are that:</p>
+<ol>
+  <li><p>Interacting with a <code>LinkedList</code> implementation that contains <code>Interval</code> objects (<code>LinkedList&lt;Interval&gt;</code>) effectively guarantees that we can call the <code>getDuration</code> and <code>getIntensity</code> methods on the queue's <code>take</code> return object.</p></li>
+  <li><p>As we are going to implement multiple threads in our application, we need to assure no <code>concurrency issues</code> arise. Since the <code>LinkedList</code> implementation supplied by the Java Api is not <code>synchronized</code>, we may face conflicts if more than one thread attempts to access the list at the same time. The <code>synchronized</code> keyword tells the Java Virtual Machine to <em>lock</em> an object while it is being accessed by a thread, and to persist this <em>lock</em> until the first thread is finished with the object.</p></li>
+  <li><p>A thread attempting to extract a value from the queue while the latter is empty will <code>wait</code> until an item is added. Also, when the thread attempting to remove an item from the buffer, it notifies other threads to let them know a new element is available for processing.</p></li>
+</ol><p>Now to interact with our queue! We need methods that <code>put</code> and <code>take</code> items to-and-from the list. There's actually a well know pattern for that: the <code>Producer-Consumer</code> pattern. </p><p>From Wikipedia:</p>
+<blockquote><p>The [Producer-Consumer] problem describes two processes [...] who share a common, fixed-size buffer used as a queue. The producer's job is to generate a piece of data, put it into the buffer and start again. At the same time, the consumer is consuming the data (i.e., removing it from the buffer) one piece at a time. The problem is to make sure that the producer won't try to add data into the buffer if it's full and that the consumer won't try to remove data from an empty buffer.</p>
+</blockquote><p>In other words, a <em>Producer</em> is a <code>thread</code> that produces new objects intended to be inserted into a queue, and a <em>Consumer</em> is the <code>thread</code> that processes the queued objects.</p><h3>Producer</h3>
+<pre><code>public class Producer implements Runnable {
+
+    protected Queue queue;
+
+    public Producer(Queue queue) {
+        this.queue = queue;
+    }
+
+    public void run() {
+        queue.put(new Interval(&quot;easy&quot;, 6000));
+        queue.put(new Interval(&quot;hard&quot;, 1000));
+        queue.put(new Interval(&quot;easy&quot;, 3000));
+    }
+}
+</code></pre><h3>Consumer</h3>
+<pre><code>public class Consumer implements Runnable {
+
+    protected Queue queue;
+
+    public Consumer(Queue queue) {
+        this.queue = queue;
+    }
+
+    public void run() {
+        while (true) { consume(queue.take()); }
+    }
+
+    void consume(Interval x) {
+        System.out.println(&quot;Pulling: &quot; + x);
+        try {
+            Thread.sleep(x.getDuration());
+        }
+        catch (InterruptedException e) {}
+    }
+}
+</code></pre><p>** note the dependency injection of the <code>queue</code> thread upon the <code>Producer</code> and <code>Consumer</code> objects. This is how the two classes communicate with each other.</p><h3>Testing</h3>
+<pre><code>public class QueueTest {
+
+    public static void main(String[] args) throws Exception {
+
+        Queue queue = new Queue();
+
+        Producer producer = new Producer(queue);
+        Consumer consumer = new Consumer(queue);
+
+        new Thread(producer).start();
+        new Thread(consumer).start();
+
+    }
+}
+</code></pre><p>As you can see, this is a pretty rudamentary implementation. The <code>Producer</code> class places elements unto the queue, which the <code>Consumer</code> "takes" out of the queue. The <code>Consumer</code> does not take subsequent <code>Interval</code> objects until it has terminated a <code>sleep()</code> method with a duration </p>
+<pre><code>Queuing: Interval{intensity=&#39;easy&#39;, duration=6000}
+Queuing: Interval{intensity=&#39;hard&#39;, duration=1000}
+Queuing: Interval{intensity=&#39;easy&#39;, duration=3000}
+Pulling: Interval{intensity=&#39;easy&#39;, duration=6000}
+Pulling: Interval{intensity=&#39;hard&#39;, duration=1000}
+Pulling: Interval{intensity=&#39;easy&#39;, duration=3000}
+</code></pre><p>And that's that! Next up we will try to add a fun GUI :)</p></p>
+
+	<hr />
+	
+<footer>&copy; Claudine Lamothe</footer>
+  </div>
+    
+    
+    <script>
+      var codeElement = document.querySelectorAll('pre code');
+      for (var j = 0; j < codeElement.length; j++) {
+        padSubsequentLines(codeElement[j]);
+      }
+
+      function padSubsequentLines(element) {
+        var
+          words = element.innerHTML.split(/\n/g),
+          html = '',
+          i;
+        for (i = 0; i < words.length; i++) {
+          html += '<span>' + words[i] + ' </span>';
+        }
+        element.innerHTML = html;
+      }
+      </script>
+
+    <script src="../../js/jquery-1.11.1.min.js"></script>
+    <script src="../../js/prettify.js"></script>
+  </body>
+</html>

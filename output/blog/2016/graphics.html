@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Animating Petit Workout</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="generator" content="claudinebroke.it">
+
+    <!-- Le styles -->
+    <!--<link href="../../css/bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="../../css/asciidoctor.css" rel="stylesheet">-->
+    <link href="../../css/base.css" rel="stylesheet">
+    <link href="../../css/prettify.css" rel="stylesheet">
+
+    <link href='https://fonts.googleapis.com/css?family=Work+Sans:300|Open+Sans|Lora:400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="../../favicon.ico">
+
+  </head>
+  <body onload="prettyPrint()" class="blog">
+    <div id="container">	
+<nav>
+  <ul class="list--lg list--dark list--inline">
+    <li><a href="index.html" class="highlight--underline">Home</a></li>
+    <li><a href="archive.html" class="highlight--underline">Archives</a></li>
+    <li><a href="about.html" class="highlight--underline">About</a></li>
+  </ul>
+</nav>	
+	<div class="page-header">
+		<h1>Animating Petit Workout</h1>
+	</div>
+
+	<p><em>09 April 2016</em></p>
+
+	<p><p>Last blog post we used a well know java thread pattern, the Producer-Consumer pattern, to create a small workout application.</p></p>
+
+	<hr />
+	
+<footer>&copy; Claudine Lamothe</footer>
+  </div>
+    
+    
+    <script>
+      var codeElement = document.querySelectorAll('pre code');
+      for (var j = 0; j < codeElement.length; j++) {
+        padSubsequentLines(codeElement[j]);
+      }
+
+      function padSubsequentLines(element) {
+        var
+          words = element.innerHTML.split(/\n/g),
+          html = '',
+          i;
+        for (i = 0; i < words.length; i++) {
+          html += '<span>' + words[i] + ' </span>';
+        }
+        element.innerHTML = html;
+      }
+      </script>
+
+    <script src="../../js/jquery-1.11.1.min.js"></script>
+    <script src="../../js/prettify.js"></script>
+  </body>
+</html>
