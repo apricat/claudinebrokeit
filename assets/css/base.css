@@ -68,8 +68,7 @@ footer {
 #container > header,
 #container > footer {
   display: block;
-  padding: 56px;
-  min-height: 72px;
+  padding: 56px 56px 38px;
 }
 
 #main {
@@ -83,7 +82,7 @@ footer {
 
 #main > section {
   padding: 28px;
-  width: 60%;
+  width: 70%;
   -webkit-order: 1;
   order: 1;
   display: -webkit-flex;
@@ -144,6 +143,7 @@ footer {
   -webkit-order: 3;
   order: 2;
   margin-left: 28px;
+  margin-top: 66px
 }
 
 #main > aside section {

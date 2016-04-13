@@ -7,6 +7,8 @@
     <ul class="list list--inline">
       <li><a href="https://www.pinterest.com/apricat/" target="_blank" class="btn btn__profile btn--light" data-tooltip="All the pretty things that make me happy"><i class="fa fa-pinterest" aria-hidden="true"></i> Pinterest</a></li>
 
+      <li><a href="https://twitter.com/iheartpigeons/" target="_blank" class="btn btn__profile btn--light" data-tooltip="Science & Music"><i class="fa fa-twitter" aria-hidden="true"></i> Twitter</a></li>
+
       <li><a href="github.com/apricat" target="_blank" class="btn btn__profile btn--light" data-tooltip="Go laugh at my code!"><i class="fa fa-github" aria-hidden="true"></i> Github</a></li>
 
       <li><a href="https://www.instagram.com/iheartpigeons/" target="_blank" class="btn btn__profile btn--light" data-tooltip="Photographs I take while riding my bike & watercolors I do on weekends"><i class="fa fa-instagram" aria-hidden="true"></i> Instagram</a></li>
