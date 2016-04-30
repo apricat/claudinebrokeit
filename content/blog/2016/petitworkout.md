@@ -1,6 +1,7 @@
 title=Petit Workout Queue
 date=2016-03-24
 type=post
+category=code
 tags=java, petit workout
 status=published
 ~~~~~~

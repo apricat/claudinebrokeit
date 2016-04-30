@@ -3,22 +3,80 @@
     
     
     <script>
-      var codeElement = document.querySelectorAll('pre code');
-      for (var j = 0; j < codeElement.length; j++) {
-        padSubsequentLines(codeElement[j]);
-      }
+var codeBlocks = document.querySelectorAll('pre code');
 
-      function padSubsequentLines(element) {
-        var
-          words = element.innerHTML.split(/\n/g),
-          html = '',
-          i;
-        for (i = 0; i < words.length; i++) {
-          html += '<span>' + words[i] + ' </span>';
-        }
-        element.innerHTML = html;
-      }
+for (var j = 0; j < codeBlocks.length; j++) {
+  codeBlocks[j].innerHTML = wrapLines(highlightSyntax(codeBlocks[j].innerHTML));
+}
+
+function highlightSyntax(html) 
+{
+  var matches = {
+    "access-mod" : /(public|private|protected)/g,
+    "type" : /(String|long|int|char|bool)/g,
+    "keyword" : /(use|class\s|namespace|function|implements|const)/g,
+    "operator" : /(\|\||&&|\+|\-\s|((!|=|==|!==|!=)(?=\s)))+/g,
+    "comment" : /(\/\*[\S\s]+?\*\/)/,
+    "method" : /(\w+)(\()/g,
+    "condition" : /(if|else|return)/g,
+    "annotation" : /(@Override)/g
+  };
+  
+  for (var key in matches) { 
+    if (matches.hasOwnProperty(key)) {
+      var tag = "<em class='code__highlight code__highlight--"+ key +"'>$1</em>";
+      
+      if (key == "method") 
+        tag += "("; // override for group $2 removing opening brace on match replace
+      
+      html = html.replace(matches[key], tag);
+    }
+  }
+  
+  return html;
+}
+
+function wrapLines(html) 
+{
+  var lines = html.split(/\n/g),
+      html  = '';
+  for (var i = 0; i < lines.length; i++) {
+    html += '<span>' + lines[i] + ' </span>';
+  }
+  return html;
+}
+
+function getQueryParams(qs) {
+    qs = qs.split('+').join(' ');
+
+    var params = {},
+        tokens,
+        re = /[?&]?([^=]+)=([^&]*)/g;
+
+    while (tokens = re.exec(qs)) {
+        params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+    }
+
+    return params;
+}
+
+var query = getQueryParams(document.location.search);
+if (query.print) {
+  window.print();
+}
       </script>
+
+      <script>
+      
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76901929-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
 
     <script src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>js/jquery-1.11.1.min.js"></script>
     <script src="<#if (content.rootpath)??>${content.rootpath}<#else></#if>js/prettify.js"></script>

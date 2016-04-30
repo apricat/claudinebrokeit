@@ -40,8 +40,13 @@ em {
   font-style: normal;
 }
 
+
 /************/
+
+
 /*  Layout  */
+
+
 /************/
 
 header {
@@ -93,12 +98,14 @@ footer {
 
 
 /*************/
+
+
 /*  Article  */
+
+
 /*************/
 
-#main > section article {
-
-}
+#main > section article {}
 
 #main > section article h3 {
   padding-top: 32px;
@@ -111,7 +118,9 @@ footer {
   text-transform: uppercase;
 }
 
+
 /** Article Tag list **/
+
 #main > section article header ul {
   list-style: none;
   padding: 0;
@@ -126,7 +135,7 @@ footer {
 }
 
 #main > section article header ul li:after {
-  content: "•";
+  content: "\2219";
   margin: 0 5px;
 }
 
@@ -136,14 +145,19 @@ footer {
 
 
 /*************/
+
+
 /*  Sidebar  */
+
+
 /*************/
 
 #main > aside {
   -webkit-order: 3;
   order: 2;
   margin-left: 28px;
-  margin-top: 66px
+  margin-top: 66px;
+  max-width: 33%;
 }
 
 #main > aside section {
@@ -156,11 +170,37 @@ footer {
   text-transform: uppercase;
   padding-bottom: 14px;
   border-bottom: 1px dotted #ddd;
+  position: relative;
+}
+
+#main > aside section header i {
+  position: absolute;
+  bottom: -16px;
+  margin-left: -16px;
+  border: 8px solid #fff;
+}
+
+
+/** override **/
+
+#main > aside iframe.instagram-media, 
+div.rwgps-widget {
+  margin-bottom: 28px !important;
+}
+#main > aside div.rwgps-widget .rwgps-entity-link {
+  display: none;
+}
+#main > aside .rwgps-widget.rwgps-summary-widget .rwgps-summary {
+  font-family: inherit;
 }
 
 
 /*************/
+
+
 /*  Buttons  */
+
+
 /*************/
 
 .btn {
@@ -196,9 +236,7 @@ footer {
   margin-right: 0px;
 }
 
-.btn--primary {
-  
-}
+.btn--primary {}
 
 .btn--light {
   border: 1px solid #ddd;
@@ -212,7 +250,11 @@ footer {
 
 
 /***********/
+
+
 /*  Links  */
+
+
 /***********/
 
 .highlight--underline {
@@ -235,8 +277,13 @@ footer {
   background: #e05038;
 }
 
+
 /***********/
+
+
 /*  Lists  */
+
+
 /***********/
 
 ol {
@@ -285,14 +332,20 @@ ol li {
   color: #666666;
 }
 
+
 /** Overide **/
+
 .list--dark .highlight--underline:hover:after {
   background-color: #666666;
 }
 
 
 /*******************/
+
+
 /*  Code & Quotes  */
+
+
 /*******************/
 
 blockquote {
@@ -347,9 +400,23 @@ pre code span:after {
   white-space: pre;
 }
 
+.code__highlight { font-style: normal; font-family: monospace; }
+.code__highlight--operator { font-weight: bold; color: #FFC48C; }
+.code__highlight--annotation { color: #FFC48C; font-style: italic }
+.code__highlight--keyword { color: #333; font-weight: bold }
+.code__highlight--access-mod { color: #3D8E91; }
+.code__highlight--comment { color: #999988; font-style: italic } /* Comment */
+.code__highlight--var { color: #008080 }
+.code__highlight--type { color: #795da3 }
+.code__highlight--method { color: #F56991; }
+.code__highlight--condition { color: #FFC48C; }
 
 /*************/
+
+
 /*  Tooltip  */
+
+
 /*************/
 
 [data-tooltip] {
@@ -410,28 +477,70 @@ pre code span:after {
   opacity: 1;
 }
 
-
 @media all and (max-width: 640px) {
+  #container {
+    width: 90%;
+  }
+  #container header {
+    padding: 56px 0 0;
+  }
   #main,
   #page {
     width: 100%;
     -webkit-flex-flow: column;
     flex-direction: column;
+    padding: 0;
   }
   #main > article,
   #main > nav,
   #main > aside {
     -webkit-order: 0;
     order: 0;
+    max-width: 100%;
+  }
+  #main section {
+    width: 90%;
+    border: none;
   }
   #main > nav,
   #main > aside,
   header,
   footer {
     min-height: 50px;
-    max-height: 50px;
   }
   #main > aside {
     margin-left: 0;
+    order: 2;
+    width: 100%;
+  }
+  .list--inline {
+    -webkit-flex-flow: column;
+    flex-direction: column;
+  }
+  .list--inline.list--lg li {
+    margin-left: 16px;
+    border-bottom: 1px dotted #ddd;
+  }
+  .list--inline.list--lg li:after {
+    content: "";
+  }
+}
+
+@media print {
+  body {
+    width: 100%;
+    background-color: #fff;
+  }
+  nav,
+  aside {
+    display: none;
+  }
+  #container > header,
+  #container > footer {
+    margin: 0;
+    padding: 0;
+  }
+  #main section {
+    width: 100%;
   }
 }

@@ -2,11 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     <url>
         <loc>http://claudinebroke.it/about.html</loc>
-        <lastmod>2013-09-24</lastmod>
+        <lastmod>2017-04-13</lastmod>
+    </url>
+    <url>
+        <loc>http://claudinebroke.it/error.html</loc>
+        <lastmod>2017-04-13</lastmod>
     </url>
     <url>
         <loc>http://claudinebroke.it/blog/2016/graphics.html</loc>
-        <lastmod>2016-04-09</lastmod>
+        <lastmod>2016-04-19</lastmod>
+    </url>
+    <url>
+        <loc>http://claudinebroke.it/blog/2016/favorite-soup-II.html</loc>
+        <lastmod>2016-04-14</lastmod>
     </url>
     <url>
         <loc>http://claudinebroke.it/blog/2016/petitworkout.html</loc>

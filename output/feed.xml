@@ -6,16 +6,191 @@
     <atom:link href="http://claudinebroke.it/feed.xml" rel="self" type="application/rss+xml" />
     <description>JBake Bootstrap Template</description>
     <language>en-gb</language>
-    <pubDate>Wed, 13 Apr 2016 01:49:40 +0000</pubDate>
-    <lastBuildDate>Wed, 13 Apr 2016 01:49:40 +0000</lastBuildDate>
+    <pubDate>Sat, 30 Apr 2016 21:15:20 +0000</pubDate>
+    <lastBuildDate>Sat, 30 Apr 2016 21:15:20 +0000</lastBuildDate>
 
     <item>
-      <title>Animating Petit Workout</title>
+      <title>Petit Workout - The Application</title>
       <link>http://claudinebroke.it/blog/2016/graphics.html</link>
-      <pubDate>Sat, 9 Apr 2016 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 19 Apr 2016 00:00:00 +0000</pubDate>
       <guid isPermaLink="false">blog/2016/graphics.html</guid>
       	<description>
-	&lt;p&gt;Last blog post we used a well know java thread pattern, the Producer-Consumer pattern, to create a small workout application.&lt;/p&gt;
+	&lt;p&gt;Hello again! Today we&apos;re going to continue working on the little workout application we instigated in my previous blog post. This post will cover the basic concepts behind generating a &lt;em&gt;Graphical User Interface&lt;/em&gt; for a Java application :coffee:&lt;/p&gt;&lt;h3&gt;JavaFX || Swing || AWT&lt;/h3&gt;&lt;p&gt;&lt;code&gt;Swing&lt;/code&gt;, &lt;code&gt;JavaFX&lt;/code&gt; and &lt;code&gt;AWT&lt;/code&gt; are GUI widget toolkits that offer components to allow the interaction between users and applications. Right away we can eliminate &lt;code&gt;AWT&lt;/code&gt; from our potential application toolkit as it directly uses the operating system&apos;s components; meaning that the resulting application will not have the same &lt;em&gt;look and feel&lt;/em&gt; on Ubuntu, Mac and Windows. This leaves us with &lt;code&gt;Swing&lt;/code&gt; and &lt;code&gt;JavaFX&lt;/code&gt; as candidates. Both are valid for our needs, however, Oracle corp. has determined that &lt;code&gt;JavaFX&lt;/code&gt; is set to be replacing &lt;code&gt;Swing&lt;/code&gt; as &lt;em&gt;the&lt;/em&gt; GUI toolkit. This means that it isn&apos;t deprecated as of yet, but is receiving far less attention in the latest Java releases.&lt;/p&gt;&lt;h3&gt;JavaFX Basics&lt;/h3&gt;&lt;p&gt;Here is a simple visual representation of how a basic JavaFX application is structured:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; _____________________
+| stage             x |
+|  _________________  |
+| | scene           | |
+| |  _____________  | |
+| | | layout pane | | |
+| | |  _________  | | |
+| | | | button  | | | |
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So we need to add components (buttons, labels, graphics, etc.) to a layout, that is set within a scene, that is held within a stage.&lt;/p&gt;&lt;p&gt;In code, it looks like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+public class WorkoutQueueTest extends Application {
+
+    private Label timerLabel;
+
+    public static void main(String[] args) throws Exception
+    {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception
+    {
+        primaryStage.setTitle(&amp;quot;Petit Workout&amp;quot;);
+
+        Button startBtn  = new Button(&amp;quot;Start&amp;quot;);
+        startBtn.setOnAction((e) -&amp;gt; startWorkout());
+
+        timerLabel = new Label(&amp;quot;00:00:00&amp;quot;);
+
+        BorderPane pane  = new BorderPane();
+        pane.setTop(startBtn);
+        pane.setBottom(timerLabel);
+        primaryStage.setScene(new Scene(pane, 300, 250));
+
+        // @todo add terminate thread on close
+        primaryStage.show();
+    }
+
+    public void startWorkout()
+    {
+        AnimationTimer animationTimer = new AnimationTimer() {
+            long startTime = System.nanoTime();
+
+            @Override
+            public void handle(long now) {
+                timerLabel.setText(
+                    ReadableTimeConverter.convert(
+                        toIntExact(
+                            (now - startTime) / 1000000000
+                        )
+                    )
+                );
+            }
+        };
+
+        animationTimer.start();
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3&gt;Labels and Buttons&lt;/h3&gt;&lt;p&gt;Components classes offer more than one constructor, meaning that the argument count will determine what funtion is called. For example:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Label timerLabel = new Label();
+timerLabel.setText(&amp;quot;00:00:00&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Is the same as:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Label timerLabel = new Label(&amp;quot;00:00:00&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is because Java supports classes with multiple constructors, which means that the constructor being called is determined by its signature. This is called &lt;em&gt;overloading constructers&lt;/em&gt;. If we dig a bit deeper, we can see that the &lt;code&gt;Label&lt;/code&gt; class offers three different constructors:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/**
+ * Creates an empty label
+ */
+public Label() {
+    initialize();
+}
+
+/**
+ * Creates Label with supplied text.
+ * @param text null text is treated as the empty string
+ */
+public Label(String text) {
+    super(text);
+    initialize();
+}
+
+/**
+ * Creates a Label with the supplied text and graphic.
+ * @param text null text is treated as the empty string
+ * @param graphic a null graphic is acceptable
+ */
+public Label(String text, Node graphic) {
+    super(text, graphic);
+    initialize();
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This means that an often used actions such as adding text and graphics to a newly created &lt;code&gt;Label&lt;/code&gt; and &lt;code&gt;Button&lt;/code&gt; objects are accessible through a one-liner method call.&lt;/p&gt;&lt;h4&gt;Buttons and Lambda Event Handling&lt;/h4&gt;&lt;p&gt;Specific to buttons is the possibility to generate event listeners whose methods execute logic based on events and targets. In our case, we want to call upon the &lt;code&gt;startWorkout&lt;/code&gt; method upon button click.&lt;/p&gt;&lt;p&gt;From the Java doc:&lt;/p&gt;
+&lt;blockquote&gt;&lt;p&gt;When a button is pressed and released a ActionEvent is sent. Your application can perform some action based on this event by implementing an EventHandler to process the ActionEvent.&lt;/p&gt;
+&lt;/blockquote&gt;&lt;p&gt;And:&lt;/p&gt;
+&lt;blockquote&gt;&lt;p&gt;Lambda Expressions enable you to encapsulate a single unit of behavior and pass it to other code. You can use a lambda expressions if you want a certain action performed on each element of a collection, when a process is completed, or when a process encounters an error.&lt;/p&gt;
+&lt;/blockquote&gt;&lt;p&gt;Starting Java 8, you can use anonynous (lambda) functions in your code:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;startBtn.setOnAction((e) -&amp;gt; startWorkout());
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is a much more direct, easy-to-read and elegant way to execute the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;startBtn.setOnAction(new EventHandler&amp;lt;ActionEvent&amp;gt;() {
+    @Override
+    public void handle(ActionEvent event) {
+       startWorkout();
+    }
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So there&apos;s really no excuse in our case to not opt for the Lambda expression; the resulting smaller code footprint and &lt;em&gt;straight-to-the-point&lt;/em&gt; syntax really improve legibility.&lt;/p&gt;&lt;h3&gt;Layout Panes&lt;/h3&gt;&lt;p&gt;Once we&apos;ve created our buttons and labels, we need to place these on the application window. This is where the JavaFX SDK&apos;s layout container classes, such as &lt;code&gt;BorderPane&lt;/code&gt;, &lt;code&gt;StackPane&lt;/code&gt;, &lt;code&gt;GridPane&lt;/code&gt; and &lt;code&gt;FlowPane&lt;/code&gt;, come to our aid. You can manually lay out UI components by setting their position and size within your JavaFX application. However, using layouts makes it easier - and quicker - to manage the classic cases where you need such common layouts as rows, columns and tiles. It even covers repositioning elements upon window resize operations. Since &lt;em&gt;Petit Workout&lt;/em&gt;, in its current iteration, is quite &lt;em&gt;humble&lt;/em&gt;, we can use the basic &lt;code&gt;BorderPane&lt;/code&gt; layout container, which looks like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; _______________________
+| top                   |
+|_______________________|
+| left | center | right |
+|______|________|_______|
+| bottom                |
+|_______________________|
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Placing our elements is then as easy as using the &lt;code&gt;set&lt;/code&gt; methods available with the &lt;code&gt;BorderPane&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;BorderPane pane = new BorderPane();
+pane.setTop(startBtn);
+pane.setBottom(timerLabel);
+&lt;/code&gt;&lt;/pre&gt;&lt;h3&gt;Scene and Stage -- Or putting it all together&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;primaryStage.setScene(new Scene(pane, 300, 250));
+primaryStage.show();
+&lt;/code&gt;&lt;/pre&gt;&lt;h3&gt;Timer&lt;/h3&gt;&lt;p&gt;Since we want to be as conservative as possible with thread usage in order to save resources, we can latch on to pre-existing runnable implementations to run a timer that monitors our workout. We can thus instantiate a new &lt;code&gt;AnimationTimer&lt;/code&gt; that is associated to the JavaFX &lt;code&gt;MasterTimer&lt;/code&gt; instance. In effect, this means that our &lt;code&gt;AnimationTimer&lt;/code&gt; events will fire upon ever frame within our JavaFX application, much like the Swing &lt;code&gt;redraw&lt;/code&gt; method.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;long timestampOnInit = System.nanoTime();
+AnimationTimer animationTimer = new AnimationTimer() {
+    @Override
+    public void handle(long now) {
+        timerLabel.setText(
+            ReadableTimeConverter.convert(
+                toIntExact((now - timestampOnInit) / 1000000000)
+            )
+        );
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In effect, upon each frame execution, compare the current timestamp with the one we captured upon &lt;em&gt;start&lt;/em&gt; button press. The resultant timestamp is afterward used to update our application&apos;s timer label with the elapsed time value converter as a &lt;code&gt;ReadableTimeConverter&lt;/code&gt; value:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;public class ReadableTimeConverter {
+
+    /**
+     * @param seconds
+     * @return String
+     */
+    public static String convert(int seconds)
+    {
+        int hr  = seconds / 3600;
+        int rem = seconds % 3600;
+        int mn  = rem / 60;
+        int sec = rem % 60;
+
+        return (hr &amp;lt; 10 ? &amp;quot;0&amp;quot; : &amp;quot;&amp;quot;) + hr + &amp;quot;:&amp;quot; + (mn &amp;lt; 10 ? &amp;quot;0&amp;quot; : &amp;quot;&amp;quot;) + mn + &amp;quot;:&amp;quot; + (sec &amp;lt; 10 ? &amp;quot;0&amp;quot; : &amp;quot;&amp;quot;) + sec;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The advantage with this solution is that we are never dependent upon the CPU cycle&apos;s &lt;em&gt;idea&lt;/em&gt; of a timestamp. If we were to instantiate a &lt;code&gt;runnable&lt;/code&gt; instance set to execute, for example, every second, after some time we would start to see pretty severe discrepencies between our application&apos;s time and real time. This is because scheduled &lt;code&gt;runnable&lt;/code&gt; tasks are dependent upon the CPU cycle&apos;s time. This can manifest in slower or faster times. So you could be, without knowing it, working out for a mear 40 minutes instead of a full 45; which is &lt;em&gt;unacceptable&lt;/em&gt; ;)&lt;/p&gt;&lt;h3&gt;Closing Statement&lt;/h3&gt;&lt;p&gt;So this brings us a little closer to a fully working workout application. In the next blog post we&apos;ll integrate our &lt;code&gt;producer-consumer&lt;/code&gt; thread pattern and add a countdown and intensity label to the GUI :excited:&lt;/p&gt;
+&lt;blockquote&gt;&lt;p&gt;As always, the code related to this blog post is available on my &lt;a href=&quot;https://github.com/apricat/petitworkout&quot;&gt;GitHub account&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+	</description>
+    </item>
+    <item>
+      <title>Favorite Soup II</title>
+      <link>http://claudinebroke.it/blog/2016/favorite-soup-II.html</link>
+      <pubDate>Thu, 14 Apr 2016 00:00:00 +0000</pubDate>
+      <guid isPermaLink="false">blog/2016/favorite-soup-II.html</guid>
+      	<description>
+	&lt;h2&gt;Leek, Turnip and Rice Soup&lt;/h2&gt;&lt;p&gt;&lt;em&gt;Time: 45 minutes&lt;/em&gt;&lt;/p&gt;&lt;p&gt;I&apos;ve been battling a bit of a cold lately, and nothing makes me happier than warm, fagrant soup when I feel like this.&lt;/p&gt;&lt;p&gt;If you&apos;re a normal human being, then you used to hate turnip as a kid. When I saw the original recipe, I focused solely on the leeks and rice, and my brain completely made abstraction of the root vegetable required. This until I hit the grocery store aisle and ended up with the unsightly blob in my hand, and that is where I decided to give it a try. I &lt;em&gt;did&lt;/em&gt; change my mind about brussel sprouts this year, so I decided to give turnips a try as an adult. I&apos;m so glad I did! I owe my mom an apology, &lt;em&gt;turnips aren&apos;t so bad&lt;/em&gt;.&lt;/p&gt;&lt;p&gt;&lt;em&gt;Adapted from the &lt;a href=&quot;http://cooking.nytimes.com/recipes/12179-leek-turnip-and-rice-soup&quot;&gt;New York Times&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;&lt;h3&gt;Ingredients&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;1 tablespoon extra virgin olive oil&lt;/li&gt;
+  &lt;li&gt;3 large leeks, white and green parts, cleaned and sliced&lt;/li&gt;
+  &lt;li&gt;1 small turnip, sliced in 1/2 inch cubes&lt;/li&gt;
+  &lt;li&gt;2 garlic cloves, minced&lt;/li&gt;
+  &lt;li&gt;6 cups water&lt;/li&gt;
+  &lt;li&gt;1 vegetable bouillon cube&lt;/li&gt;
+  &lt;li&gt;salt and pepper&lt;/li&gt;
+  &lt;li&gt;1 bay leaf&lt;/li&gt;
+  &lt;li&gt;1/2 cups of long brown rice&lt;/li&gt;
+  &lt;li&gt;2 handfuls of fresh italian parsley, chopped&lt;/li&gt;
+&lt;/ul&gt;&lt;h3&gt;Preparation&lt;/h3&gt;&lt;p&gt;On medium, heat the oil in a large soup pot and add leek slices. Cook until the leeks begin to soften and add turnip. Stir often and cook for about 5 more minutes, or until leeks are fragrant and turnips are translucent. Add salt, pepper and garlic, cook for another minute. Add water, stock, bay leaf and rice. Set kitchen timer to 30 minutes, reduce heat to low, and go watch some netflix. Add fresh parsley to soup before serving.&lt;/p&gt;&lt;h3&gt;Notes&lt;/h3&gt;&lt;p&gt;I usually start by slicing the leek. Then, while the leek is softening in the pot, I cube the turnip. On the side, I also boil the required 6 cups of water in my electric kettle to speed up the soup making process.&lt;/p&gt;&lt;p&gt;Also, Leek and Turnip are best bought, in Quebec, in winter: &lt;a href=&quot;https://www.mapaq.gouv.qc.ca/fr/Publications/FruitsetLegumesduquebec.pdf&quot;&gt;calendar&lt;/a&gt; (fr)&lt;/p&gt;
 	</description>
     </item>
     <item>
