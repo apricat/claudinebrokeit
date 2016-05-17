@@ -13,10 +13,7 @@
 
     <li><a href="https://www.instagram.com/iheartpigeons/" target="_blank" class="btn btn__profile btn--light" data-tooltip="Photographs I take while riding my bike & watercolors I do on weekends"><i class="fa fa-instagram" aria-hidden="true"></i> Instagram</a></li>
 
-    <li><a href="https://ca.linkedin.com/in/claudinelamothe" target="_blank" class="btn btn__profile btn--light" data-tooltip="Hire me!"><i class="fa fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
-
-    <li><a href="http://www.khanacademy.org/profile/apricat" target="_blank" class="btn btn__profile btn--light" data-tooltip="Back to the basics"><i class="fa fa-leaf" aria-hidden="true"></i> KhanAcademy</a></li>
-    
+    <li><a href="https://ca.linkedin.com/in/claudinelamothe" target="_blank" class="btn btn__profile btn--light" data-tooltip="Work it!"><i class="fa fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
   </ul>
 
 </section>
@@ -29,4 +26,17 @@
     <p><em><a href="https://www.amazon.ca/gp/product/0140447474/" target="_blank">Critique Of Pure Reason</a></em> by Immanuel Kant (Author), Marcus Weigelt (Editor, Introduction, Translator), Max Muller (Translator)</p>
     <p><em><a href="https://www.amazon.ca/gp/product/0679767924/" target="_blank">Independent People</a></em> by Halldor Laxness (Author)</p>
   </section>
+
+  <a class="rwgps-widget" href="https://ridewithgps.com/users/709906" data-rwgps-metric="1" data-rwgps-user-id="709906" data-rwgps-include="year">Activities for Claudine Lamothe</a>
+  <script>
+  (function(d,s) { 
+    if(!d.getElementById('rwgps-sdk')) {
+      var el = d.getElementsByTagName(s)[0],
+          js = d.createElement(s);
+      js.id = 'rwgps-sdk';
+      js.src = "//ridewithgps.com/javascripts/sdk.js?1462326933014";
+      el.parentNode.insertBefore(js, el);
+    }
+  })(document, 'script');
+  </script>
 </aside>

@@ -6,9 +6,281 @@
     <atom:link href="http://claudinebroke.it/feed.xml" rel="self" type="application/rss+xml" />
     <description>JBake Bootstrap Template</description>
     <language>en-gb</language>
-    <pubDate>Sat, 30 Apr 2016 21:15:20 +0000</pubDate>
-    <lastBuildDate>Sat, 30 Apr 2016 21:15:20 +0000</lastBuildDate>
+    <pubDate>Fri, 13 May 2016 11:41:30 +0000</pubDate>
+    <lastBuildDate>Fri, 13 May 2016 11:41:30 +0000</lastBuildDate>
 
+    <item>
+      <title>Favorite Pizza I</title>
+      <link>http://claudinebroke.it/blog/2016/favorite-pizza-I.html</link>
+      <pubDate>Mon, 9 May 2016 00:00:00 +0000</pubDate>
+      <guid isPermaLink="false">blog/2016/favorite-pizza-I.html</guid>
+      	<description>
+	&lt;h2&gt;Blueberry, Ricotta, Feta and Honey-caramelized Onion Naan Pizza&lt;/h2&gt;&lt;p&gt;&lt;em&gt;Time: 1 hour&lt;/em&gt;&lt;br/&gt;&lt;em&gt;Makes: 4 individual pizzas&lt;/em&gt;&lt;/p&gt;&lt;p&gt;I know what you&apos;re thinking: &quot;That recipe sounds weird&quot; -- and you&apos;re right, it is. Thing is, I just spent the weekend solo and decided that that would be the perfect occasion to experiment a little and make a weird-yet-amazingly-delicious sweet-salty-spicy pizza. In fact, this recipe was so good that I just had to make it again the last night for my boyfriend to taste.&lt;/p&gt;&lt;h3&gt;Dough&lt;/h3&gt;&lt;p&gt;If you&apos;ve never made dough, I highly suggest you try your hand at it; it&apos;s quite easy and rewarding! It requires very little effort and there&apos;s convenient &lt;em&gt;waiting&lt;/em&gt; times that you can use to prep the toppings, drink beer and eat chips :)&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;1 tbs dry yeast&lt;/li&gt;
+  &lt;li&gt;1 tbs sugar&lt;/li&gt;
+  &lt;li&gt;1 tsp salt&lt;/li&gt;
+  &lt;li&gt;125ml lukewarm water&lt;/li&gt;
+  &lt;li&gt;2 cups non-bleached flour&lt;/li&gt;
+  &lt;li&gt;1 tbs olive oil&lt;/li&gt;
+&lt;/ul&gt;&lt;h3&gt;Pizza Toppings&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;1/2 cup ricotta cheese&lt;/li&gt;
+  &lt;li&gt;1/2 cup feta cheese, finely crumbled&lt;/li&gt;
+  &lt;li&gt;1 cup frozen blueberries&lt;/li&gt;
+  &lt;li&gt;1 tsp honey&lt;/li&gt;
+  &lt;li&gt;1 tsp red pepper flakes&lt;/li&gt;
+  &lt;li&gt;1 red onion, thinly sliced&lt;/li&gt;
+  &lt;li&gt;1 tsp olive oil&lt;/li&gt;
+  &lt;li&gt;pinch of salt&lt;/li&gt;
+&lt;/ul&gt;&lt;h3&gt;Preparation&lt;/h3&gt;&lt;p&gt;Get the water to about 37 degrees celsius. Conveniently, this is approximately the same temperature as your body&apos;s! So you can get a close-enough temperature straight from the tap by wetting your finger, dropping it under your tongue, adjusting the tap temperature and repeating the operation until the water feels neither too hot or too cold under the tongue. Once satisfying, pour 125ml into a large bowl. Stir in yeast and sugar and set aside for 15 minutes**.&lt;/p&gt;&lt;p&gt;Once the yeast has been activated, stir in oil, salt and flour. Mix using hands once it becomes too hard. The resulting ball of dough should be sticky, and you can add flour and/or water to the mix if the texture isn&apos;t satisfactory. Wait 15 minutes. Knead the dough 20 times and separate into 4 equal-sized balls. On a lightly floured surface, use a rolling pin to get the balls to approximately the surface size of your frying pan. Set aside.&lt;/p&gt;&lt;p&gt;Pre-heat oven to 400°F. &lt;/p&gt;&lt;p&gt;Slice onion. Heat oil on low-heat in non-stick frying pan and add onion, red pepper flakes. Cook until onions are translucent. Add honey and fry another few minutes until onions are caramelized and fragrant. Remove onions from pan, and add start frying, one by one, the pizza doughs. Flip when each side is golden and crispy.&lt;/p&gt;&lt;p&gt;Once the pizza doughs are ready, place them on baking sheets. Spread the ricotta over the doughs, and add feta, caramelized onions, and blueberries on top.&lt;/p&gt;&lt;p&gt;Bake for about 10 minutes or until the dough is crispy and the toppings are hot. Sprinkle some salt on top before serving.&lt;/p&gt;&lt;p&gt;** Note that if after 15 minutes the yeast mixture hasn&apos;t &quot;foamed&quot; then you should just throw out the mixture and try again; that happens when the water is too warm, too cold, or if the yeast is too old.&lt;/p&gt;&lt;p&gt;&lt;em&gt;Beer: &lt;em&gt;Houblon Noir&lt;/em&gt;, a Black IPA from Brasseurs du Monde&lt;/em&gt;&lt;/p&gt;
+	</description>
+    </item>
+    <item>
+      <title>Petit Workout - The Application</title>
+      <link>http://claudinebroke.it/blog/2016/petitworkout-III.html</link>
+      <pubDate>Sun, 8 May 2016 00:00:00 +0000</pubDate>
+      <guid isPermaLink="false">blog/2016/petitworkout-III.html</guid>
+      	<description>
+	&lt;p&gt;&lt;img src=&quot;images/SpriteSheet.png&quot; alt=&quot;Working out&quot; title=&quot;:]&quot;&quot;/&gt;&lt;/p&gt;&lt;p&gt;Our petit workout application is finally taking shape! We can now start our workouts and see the elapsed time... which means that all we have currently is no better than a timer!&lt;/p&gt;&lt;p&gt;In this article, we&apos;ll enhance the application with a way to visualize the interval&apos;s intensity, the remaining time for the current interval, and we&apos;ll add a little sprite animation for some visual appeal.&lt;/p&gt;&lt;h3&gt;Main Class&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;public class WorkoutQueueTest extends Application {
+
+    private Label timerLabel     = new Label(&amp;quot;00:00:00&amp;quot;);
+    private Label countdownLabel = new Label(&amp;quot;00:00:00&amp;quot;);
+    private Label intensityLabel = new Label(&amp;quot;Easy&amp;quot;);
+
+    private Sprite spriteAnimation;
+
+    public static void main(String[] args) throws Exception
+    {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception
+    {
+        primaryStage.setTitle(&amp;quot;Petit Workout&amp;quot;);
+
+        final ImageView imageView = new ImageView(
+            new Image(&amp;quot;file:&amp;quot; + this.getClass().getResource(&amp;quot;/SpriteSheet.png&amp;quot;).getPath())
+        );
+        imageView.setViewport(new Rectangle2D(0, 68, 64, 64));
+
+        spriteAnimation = new Sprite(imageView, 4, 4, 0, 68, 64, 64);
+        spriteAnimation.setCycles(Duration.millis(1000));
+
+        final Button startBtn = new Button(&amp;quot;Start&amp;quot;);
+        startBtn.setOnAction((e) -&amp;gt; startWorkout());
+
+        BorderPane pane = new BorderPane();
+
+        pane.setTop(startBtn);
+        pane.setBottom(timerLabel);
+        pane.setRight(countdownLabel);
+
+        StackPane centerPane = new StackPane();
+        centerPane.getChildren().addAll(intensityLabel, imageView);
+
+        pane.setCenter(centerPane);
+
+        primaryStage.setScene(new Scene(pane, 300, 250));
+
+        primaryStage.show();
+    }
+
+    public void startWorkout()
+    {
+        Queue queue = new Queue();
+
+        spriteAnimation.play();
+
+        (new EventsPerFrame(queue, timerLabel, countdownLabel, intensityLabel)).start();
+
+        Producer producer = new Producer(queue);
+        new Thread(producer).start();
+
+        Consumer consumer = new Consumer(queue);
+        new Thread(consumer).start();
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;As you can see, a few things were added to the main classe&apos;s &lt;code&gt;start&lt;/code&gt; method. The &lt;code&gt;ImageView&lt;/code&gt; loads our sprite sheet image, and the &lt;code&gt;SpriteAnimation&lt;/code&gt; class handles animating it. We also added label elements, which are updated on every frame using the &lt;code&gt;EventsPerFrame&lt;/code&gt; method that extends the &lt;code&gt;javafx.animation.AnimationTimer&lt;/code&gt; class.&lt;/p&gt;&lt;h3&gt;Labels&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;private Label timerLabel     = new Label(&amp;quot;00:00:00&amp;quot;);
+private Label countdownLabel = new Label(&amp;quot;00:00:00&amp;quot;);
+private Label intensityLabel = new Label(&amp;quot;Easy&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The main class is then only in charge of &lt;em&gt;placing&lt;/em&gt; the elements within the application window:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;final Button startBtn = new Button(&amp;quot;Start&amp;quot;);
+startBtn.setOnAction((e) -&amp;gt; startWorkout());
+
+BorderPane pane = new BorderPane();
+
+pane.setTop(startBtn);
+pane.setBottom(timerLabel);
+pane.setRight(countdownLabel);
+
+StackPane centerPane = new StackPane();
+centerPane.getChildren().addAll(intensityLabel, imageView);
+
+pane.setCenter(centerPane);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Note that the &lt;code&gt;intensityLabel&lt;/code&gt; shares a &lt;code&gt;BorderPane&lt;/code&gt; pane with the &lt;code&gt;imageView&lt;/code&gt; object. Using the &lt;code&gt;StackPane&lt;/code&gt; layout, or any other layouts, we can easily add multiple elements unto a single pane.&lt;/p&gt;&lt;p&gt;In the previous blog post, we used the &lt;code&gt;AnimationTimer&lt;/code&gt; method to fire events on each frame. To better handle the extra logic behind our extra labels, the &lt;code&gt;EventsPerFrame&lt;/code&gt; method was created to extend on the &lt;code&gt;AnimationTimer&lt;/code&gt; and handle the labels&apos; state on every frame change.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;(new EventsPerFrame(queue, timerLabel, countdownLabel, intensityLabel)).start();
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now let&apos;s look at the class in detail:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;public class EventsPerFrame extends javafx.animation.AnimationTimer
+{
+    long startTime = System.nanoTime();
+    int stopwatch  = 0;
+    Interval intervalInProgress;
+
+    private Queue queue;
+    private Label timerLabel;
+    private Label countdownLabel;
+    private Label intensityLabel;
+
+    public EventsPerFrame(
+        Queue queue,
+        Label timerLabel,
+        Label countdownLabel,
+        Label intensityLabel
+    ) {
+        this.queue          = queue;
+        this.timerLabel     = timerLabel;
+        this.countdownLabel = countdownLabel;
+        this.intensityLabel = intensityLabel;
+    }
+
+    @Override
+    public void handle(long now)
+    {
+        Interval interval;
+        try {
+            interval = queue.element();
+        } catch (java.lang.NullPointerException e) {
+            return;
+        }
+
+        if (interval == null) {
+            return;
+        }
+
+        int elapsedTime = toIntExact((now - startTime) / 1000000000);
+
+        timerLabel.setText(ReadableTimeConverter.convert(elapsedTime));
+        countdownLabel.setText(ReadableTimeConverter.convert(stopwatch - elapsedTime));
+        intensityLabel.setText(interval.getIntensity());
+
+        if (intervalStillInProgress(interval)) {
+            return;
+        }
+
+        intervalInProgress = interval;
+        stopwatch          = toIntExact(elapsedTime + interval.getDuration());
+    }
+
+    private boolean intervalStillInProgress(Interval interval) {
+        return intervalInProgress == interval;
+    }
+}
+
+public class ReadableTimeConverter {
+
+    /**
+     * @param seconds
+     * @return String
+     */
+    public static String convert(int seconds)
+    {
+        int hr = seconds / 3600;
+        int rem = seconds % 3600;
+        int mn = rem / 60;
+        int sec = rem % 60;
+
+        return (hr &amp;lt; 10 ? &amp;quot;0&amp;quot; : &amp;quot;&amp;quot;) + hr + &amp;quot;:&amp;quot; + (mn &amp;lt; 10 ? &amp;quot;0&amp;quot; : &amp;quot;&amp;quot;) + mn + &amp;quot;:&amp;quot; + (sec &amp;lt; 10 ? &amp;quot;0&amp;quot; : &amp;quot;&amp;quot;) + sec;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It may look complicated, but its quite simple; we always increment the &lt;code&gt;elapsedTime&lt;/code&gt;, always decrement the &lt;code&gt;stowatch&lt;/code&gt;, and always update the &lt;code&gt;intensityLabel&lt;/code&gt; with the value we get from the current &lt;code&gt;Interval&lt;/code&gt; object being processed. The only complicated bit is that we need to &quot;refill&quot; the stopwatch with the interval&apos;s duration whenever we detect that the queue has picked up a new interval.&lt;/p&gt;&lt;h3&gt;ImageView&lt;/h3&gt;&lt;p&gt;Now back on the main class, we added an &lt;code&gt;ImageView&lt;/code&gt;, which is sent to a &lt;code&gt;Sprite&lt;/code&gt; class.&lt;/p&gt;&lt;p&gt;From the Java documentation:&lt;/p&gt;
+&lt;blockquote&gt;&lt;p&gt;&quot;The ImageView is a Node used for painting images loaded with Image class.&quot;&lt;/p&gt;
+&lt;/blockquote&gt;&lt;p&gt;In other words, the Image view, using the &lt;code&gt;setViewport&lt;/code&gt; method, permits the &quot;clipping&quot; of an image, i.e. removing and adding pixels to an image&apos;s &quot;visible area&quot;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;final ImageView imageView = new ImageView(
+    new Image(&amp;quot;file:&amp;quot; + this.getClass().getResource(&amp;quot;/SpriteSheet.png&amp;quot;).getPath())
+);
+imageView.setViewport(new Rectangle2D(0, 68, 64, 64));
+spriteAnimation = new Sprite(imageView, 4, 4, 0, 68, 64, 64);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;&lt;p&gt;Note that since the image is a local resource file, we append &lt;code&gt;file:&lt;/code&gt; to the path.&lt;/p&gt;
+&lt;/blockquote&gt;&lt;p&gt;The &lt;code&gt;Sprite&lt;/code&gt; class is where the animation happens. Simply put, our viewport has a set width and height, that &quot;frames&quot; our &lt;code&gt;SpriteSheet&lt;/code&gt;. On every new frame animation we &lt;code&gt;move&lt;/code&gt; the &lt;code&gt;SpriteSheet&lt;/code&gt; horizontally and this, until we reach the end of the &lt;code&gt;SpriteSheet&lt;/code&gt; where we start again. This is the same concept used with traditional film, so the logic is quite simple to grasp.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;public class Sprite extends Transition {
+
+    private final ImageView imageView;
+    private final int frameCount;
+    private final int columns;
+    private final int offsetX;
+    private final int offsetY;
+    private final int width;
+    private final int height;
+
+    private int lastIndex;
+
+    public Sprite(
+        ImageView imageView,
+        int frameCount,
+        int columns,
+        int offsetX,
+        int offsetY,
+        int width,
+        int height
+    ) {
+        this.imageView  = imageView;
+        this.frameCount = frameCount;
+        this.columns    = columns;
+        this.offsetX    = offsetX;
+        this.offsetY    = offsetY;
+        this.width      = width;
+        this.height     = height;
+    }
+
+    public void setCycles(Duration duration)
+    {
+        setCycleDuration(duration);
+        setInterpolator(Interpolator.LINEAR);
+        setCycleCount(INDEFINITE);
+    }
+
+    protected void interpolate(double k) {
+        final int index = Math.min((int) Math.floor(k * frameCount), frameCount - 1);
+        if (index != lastIndex) {
+            final int x = (index % columns) * width  + offsetX;
+            final int y = (index / columns) * height + offsetY;
+            imageView.setViewport(new Rectangle2D(x, y, width, height));
+            lastIndex = index;
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And that&apos;s it! So now, we can &lt;em&gt;start&lt;/em&gt; our workout series, display the &lt;em&gt;intensity&lt;/em&gt; for the current interval, as well as its &lt;em&gt;remaining time&lt;/em&gt;, and, lastly, display a little sprite animation to go along with the application. In the next article, we will cover how to implement multiple workouts as &lt;code&gt;json&lt;/code&gt; structured application resources.&lt;/p&gt;
+&lt;blockquote&gt;&lt;p&gt;As always, the code related to this blog post is available on my &lt;a href=&quot;https://github.com/apricat/petitworkout&quot;&gt;GitHub account&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+	</description>
+    </item>
+    <item>
+      <title>Favorite Grilled Cheese III</title>
+      <link>http://claudinebroke.it/blog/2016/favorite-grilled-cheese-III.html</link>
+      <pubDate>Sun, 1 May 2016 00:00:00 +0000</pubDate>
+      <guid isPermaLink="false">blog/2016/favorite-grilled-cheese-III.html</guid>
+      	<description>
+	&lt;p&gt;&lt;img src=&quot;images/avocado.jpg&quot; alt=&quot;Health Potato&quot; title=&quot;Drawing avocadoes is hard :\&quot;&quot;/&gt;&lt;/p&gt;&lt;h2&gt;Guacamole Grilled Cheese&lt;/h2&gt;&lt;p&gt;&lt;em&gt;Time: 30 minutes&lt;/em&gt;&lt;br/&gt;&lt;em&gt;Makes: 4 sandwiches&lt;/em&gt;&lt;/p&gt;&lt;p&gt;Every once in a while, you ask your partner what he/she would like for dinner and they blurt out something so weird that you just have to make it. This is what happened to me yesterday when I inquired about what we should eat and got &lt;em&gt;avocado grilled cheese&lt;/em&gt; as an answer. Turns out its quite popular -- as proven by a quick internet search -- and definitely very tasty, making this one of my favorite grilled cheese recipe of all time. &lt;/p&gt;&lt;h3&gt;Guacamole&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;1 avocado&lt;/li&gt;
+  &lt;li&gt;1/2 roma tomato, chopped&lt;/li&gt;
+  &lt;li&gt;2 tbs red onion, chopped&lt;/li&gt;
+  &lt;li&gt;1 handful fresh cilantro, chopped&lt;/li&gt;
+  &lt;li&gt;juice from 1 lime&lt;/li&gt;
+  &lt;li&gt;salt and pepper&lt;/li&gt;
+&lt;/ul&gt;&lt;h3&gt;Grilled Cheese&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;8 slices of cheddar cheese&lt;/li&gt;
+  &lt;li&gt;8 slices of whole wheat bread -- &lt;em&gt;I used a small loaf of Harvest Bread, which is a mix of roasted pumpkin seeds, flax seeds, sunflower seeds, millet and poppy seeds&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;butter, spread on one side of each bread slices&lt;/li&gt;
+&lt;/ul&gt;&lt;h3&gt;Preparation&lt;/h3&gt;&lt;p&gt;Prepare guacamole first, as it takes the longest to prepare. Heat up non-stick frying pan on medium. Add 1/2 of slices of bread, butter side down. Add two slices of cheese and 1/4 of guacamole mixture on top of each slice of bread. Top with slice of bread, butter side up. Flip once the bottom slice is golden brown, and serve once both sides are roasted.&lt;/p&gt;&lt;p&gt;&lt;em&gt;Beer: &lt;em&gt;Oktoberfest&lt;/em&gt;, a copper lager from Les Trois Mousquetaires&lt;/em&gt;&lt;/p&gt;
+	</description>
+    </item>
     <item>
       <title>Petit Workout - The Application</title>
       <link>http://claudinebroke.it/blog/2016/graphics.html</link>
@@ -53,9 +325,8 @@ public class WorkoutQueueTest extends Application {
         BorderPane pane  = new BorderPane();
         pane.setTop(startBtn);
         pane.setBottom(timerLabel);
-        primaryStage.setScene(new Scene(pane, 300, 250));
 
-        // @todo add terminate thread on close
+        primaryStage.setScene(new Scene(pane, 300, 250));
         primaryStage.show();
     }
 

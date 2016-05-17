@@ -64,9 +64,8 @@ In code, it looks like this:
 	        BorderPane pane  = new BorderPane();
 	        pane.setTop(startBtn);
 	        pane.setBottom(timerLabel);
+	        
 	        primaryStage.setScene(new Scene(pane, 300, 250));
-
-	        // @todo add terminate thread on close
 	        primaryStage.show();
 	    }
 

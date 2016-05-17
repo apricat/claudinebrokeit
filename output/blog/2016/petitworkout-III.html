@@ -50,10 +50,224 @@
 		<article>
 			<header>
 				<h1>Petit Workout - The Application</h1>
-				<small>Posted on 25 April 2016</small>
+				<small>Posted on 08 May 2016</small>
 			</header>
 
-			<p></p>
+			<p><p><img src="images/SpriteSheet.png" alt="Working out" title=":]""/></p><p>Our petit workout application is finally taking shape! We can now start our workouts and see the elapsed time... which means that all we have currently is no better than a timer!</p><p>In this article, we'll enhance the application with a way to visualize the interval's intensity, the remaining time for the current interval, and we'll add a little sprite animation for some visual appeal.</p><h3>Main Class</h3>
+<pre><code>public class WorkoutQueueTest extends Application {
+
+    private Label timerLabel     = new Label(&quot;00:00:00&quot;);
+    private Label countdownLabel = new Label(&quot;00:00:00&quot;);
+    private Label intensityLabel = new Label(&quot;Easy&quot;);
+
+    private Sprite spriteAnimation;
+
+    public static void main(String[] args) throws Exception
+    {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception
+    {
+        primaryStage.setTitle(&quot;Petit Workout&quot;);
+
+        final ImageView imageView = new ImageView(
+            new Image(&quot;file:&quot; + this.getClass().getResource(&quot;/SpriteSheet.png&quot;).getPath())
+        );
+        imageView.setViewport(new Rectangle2D(0, 68, 64, 64));
+
+        spriteAnimation = new Sprite(imageView, 4, 4, 0, 68, 64, 64);
+        spriteAnimation.setCycles(Duration.millis(1000));
+
+        final Button startBtn = new Button(&quot;Start&quot;);
+        startBtn.setOnAction((e) -&gt; startWorkout());
+
+        BorderPane pane = new BorderPane();
+
+        pane.setTop(startBtn);
+        pane.setBottom(timerLabel);
+        pane.setRight(countdownLabel);
+
+        StackPane centerPane = new StackPane();
+        centerPane.getChildren().addAll(intensityLabel, imageView);
+
+        pane.setCenter(centerPane);
+
+        primaryStage.setScene(new Scene(pane, 300, 250));
+
+        primaryStage.show();
+    }
+
+    public void startWorkout()
+    {
+        Queue queue = new Queue();
+
+        spriteAnimation.play();
+
+        (new EventsPerFrame(queue, timerLabel, countdownLabel, intensityLabel)).start();
+
+        Producer producer = new Producer(queue);
+        new Thread(producer).start();
+
+        Consumer consumer = new Consumer(queue);
+        new Thread(consumer).start();
+    }
+}
+</code></pre><p>As you can see, a few things were added to the main classe's <code>start</code> method. The <code>ImageView</code> loads our sprite sheet image, and the <code>SpriteAnimation</code> class handles animating it. We also added label elements, which are updated on every frame using the <code>EventsPerFrame</code> method that extends the <code>javafx.animation.AnimationTimer</code> class.</p><h3>Labels</h3>
+<pre><code>private Label timerLabel     = new Label(&quot;00:00:00&quot;);
+private Label countdownLabel = new Label(&quot;00:00:00&quot;);
+private Label intensityLabel = new Label(&quot;Easy&quot;);
+</code></pre><p>The main class is then only in charge of <em>placing</em> the elements within the application window:</p>
+<pre><code>final Button startBtn = new Button(&quot;Start&quot;);
+startBtn.setOnAction((e) -&gt; startWorkout());
+
+BorderPane pane = new BorderPane();
+
+pane.setTop(startBtn);
+pane.setBottom(timerLabel);
+pane.setRight(countdownLabel);
+
+StackPane centerPane = new StackPane();
+centerPane.getChildren().addAll(intensityLabel, imageView);
+
+pane.setCenter(centerPane);
+</code></pre><p>Note that the <code>intensityLabel</code> shares a <code>BorderPane</code> pane with the <code>imageView</code> object. Using the <code>StackPane</code> layout, or any other layouts, we can easily add multiple elements unto a single pane.</p><p>In the previous blog post, we used the <code>AnimationTimer</code> method to fire events on each frame. To better handle the extra logic behind our extra labels, the <code>EventsPerFrame</code> method was created to extend on the <code>AnimationTimer</code> and handle the labels' state on every frame change.</p>
+<pre><code>(new EventsPerFrame(queue, timerLabel, countdownLabel, intensityLabel)).start();
+</code></pre><p>Now let's look at the class in detail:</p>
+<pre><code>public class EventsPerFrame extends javafx.animation.AnimationTimer
+{
+    long startTime = System.nanoTime();
+    int stopwatch  = 0;
+    Interval intervalInProgress;
+
+    private Queue queue;
+    private Label timerLabel;
+    private Label countdownLabel;
+    private Label intensityLabel;
+
+    public EventsPerFrame(
+        Queue queue,
+        Label timerLabel,
+        Label countdownLabel,
+        Label intensityLabel
+    ) {
+        this.queue          = queue;
+        this.timerLabel     = timerLabel;
+        this.countdownLabel = countdownLabel;
+        this.intensityLabel = intensityLabel;
+    }
+
+    @Override
+    public void handle(long now)
+    {
+        Interval interval;
+        try {
+            interval = queue.element();
+        } catch (java.lang.NullPointerException e) {
+            return;
+        }
+
+        if (interval == null) {
+            return;
+        }
+
+        int elapsedTime = toIntExact((now - startTime) / 1000000000);
+
+        timerLabel.setText(ReadableTimeConverter.convert(elapsedTime));
+        countdownLabel.setText(ReadableTimeConverter.convert(stopwatch - elapsedTime));
+        intensityLabel.setText(interval.getIntensity());
+
+        if (intervalStillInProgress(interval)) {
+            return;
+        }
+
+        intervalInProgress = interval;
+        stopwatch          = toIntExact(elapsedTime + interval.getDuration());
+    }
+
+    private boolean intervalStillInProgress(Interval interval) {
+        return intervalInProgress == interval;
+    }
+}
+
+public class ReadableTimeConverter {
+
+    /**
+     * @param seconds
+     * @return String
+     */
+    public static String convert(int seconds)
+    {
+        int hr = seconds / 3600;
+        int rem = seconds % 3600;
+        int mn = rem / 60;
+        int sec = rem % 60;
+
+        return (hr &lt; 10 ? &quot;0&quot; : &quot;&quot;) + hr + &quot;:&quot; + (mn &lt; 10 ? &quot;0&quot; : &quot;&quot;) + mn + &quot;:&quot; + (sec &lt; 10 ? &quot;0&quot; : &quot;&quot;) + sec;
+    }
+}
+</code></pre><p>It may look complicated, but its quite simple; we always increment the <code>elapsedTime</code>, always decrement the <code>stowatch</code>, and always update the <code>intensityLabel</code> with the value we get from the current <code>Interval</code> object being processed. The only complicated bit is that we need to "refill" the stopwatch with the interval's duration whenever we detect that the queue has picked up a new interval.</p><h3>ImageView</h3><p>Now back on the main class, we added an <code>ImageView</code>, which is sent to a <code>Sprite</code> class.</p><p>From the Java documentation:</p>
+<blockquote><p>"The ImageView is a Node used for painting images loaded with Image class."</p>
+</blockquote><p>In other words, the Image view, using the <code>setViewport</code> method, permits the "clipping" of an image, i.e. removing and adding pixels to an image's "visible area"</p>
+<pre><code>final ImageView imageView = new ImageView(
+    new Image(&quot;file:&quot; + this.getClass().getResource(&quot;/SpriteSheet.png&quot;).getPath())
+);
+imageView.setViewport(new Rectangle2D(0, 68, 64, 64));
+spriteAnimation = new Sprite(imageView, 4, 4, 0, 68, 64, 64);
+</code></pre>
+<blockquote><p>Note that since the image is a local resource file, we append <code>file:</code> to the path.</p>
+</blockquote><p>The <code>Sprite</code> class is where the animation happens. Simply put, our viewport has a set width and height, that "frames" our <code>SpriteSheet</code>. On every new frame animation we <code>move</code> the <code>SpriteSheet</code> horizontally and this, until we reach the end of the <code>SpriteSheet</code> where we start again. This is the same concept used with traditional film, so the logic is quite simple to grasp.</p>
+<pre><code>public class Sprite extends Transition {
+
+    private final ImageView imageView;
+    private final int frameCount;
+    private final int columns;
+    private final int offsetX;
+    private final int offsetY;
+    private final int width;
+    private final int height;
+
+    private int lastIndex;
+
+    public Sprite(
+        ImageView imageView,
+        int frameCount,
+        int columns,
+        int offsetX,
+        int offsetY,
+        int width,
+        int height
+    ) {
+        this.imageView  = imageView;
+        this.frameCount = frameCount;
+        this.columns    = columns;
+        this.offsetX    = offsetX;
+        this.offsetY    = offsetY;
+        this.width      = width;
+        this.height     = height;
+    }
+
+    public void setCycles(Duration duration)
+    {
+        setCycleDuration(duration);
+        setInterpolator(Interpolator.LINEAR);
+        setCycleCount(INDEFINITE);
+    }
+
+    protected void interpolate(double k) {
+        final int index = Math.min((int) Math.floor(k * frameCount), frameCount - 1);
+        if (index != lastIndex) {
+            final int x = (index % columns) * width  + offsetX;
+            final int y = (index / columns) * height + offsetY;
+            imageView.setViewport(new Rectangle2D(x, y, width, height));
+            lastIndex = index;
+        }
+    }
+}
+</code></pre><p>And that's it! So now, we can <em>start</em> our workout series, display the <em>intensity</em> for the current interval, as well as its <em>remaining time</em>, and, lastly, display a little sprite animation to go along with the application. In the next article, we will cover how to implement multiple workouts as <code>json</code> structured application resources.</p>
+<blockquote><p>As always, the code related to this blog post is available on my <a href="https://github.com/apricat/petitworkout">GitHub account</a>.</p>
+</blockquote></p>
 
 			<footer>
 
@@ -85,10 +299,7 @@
 
     <li><a href="https://www.instagram.com/iheartpigeons/" target="_blank" class="btn btn__profile btn--light" data-tooltip="Photographs I take while riding my bike & watercolors I do on weekends"><i class="fa fa-instagram" aria-hidden="true"></i> Instagram</a></li>
 
-    <li><a href="https://ca.linkedin.com/in/claudinelamothe" target="_blank" class="btn btn__profile btn--light" data-tooltip="Hire me!"><i class="fa fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
-
-    <li><a href="http://www.khanacademy.org/profile/apricat" target="_blank" class="btn btn__profile btn--light" data-tooltip="Back to the basics"><i class="fa fa-leaf" aria-hidden="true"></i> KhanAcademy</a></li>
-    
+    <li><a href="https://ca.linkedin.com/in/claudinelamothe" target="_blank" class="btn btn__profile btn--light" data-tooltip="Work it!"><i class="fa fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
   </ul>
 
 </section>
@@ -101,6 +312,19 @@
     <p><em><a href="https://www.amazon.ca/gp/product/0140447474/" target="_blank">Critique Of Pure Reason</a></em> by Immanuel Kant (Author), Marcus Weigelt (Editor, Introduction, Translator), Max Muller (Translator)</p>
     <p><em><a href="https://www.amazon.ca/gp/product/0679767924/" target="_blank">Independent People</a></em> by Halldor Laxness (Author)</p>
   </section>
+
+  <a class="rwgps-widget" href="https://ridewithgps.com/users/709906" data-rwgps-metric="1" data-rwgps-user-id="709906" data-rwgps-include="year">Activities for Claudine Lamothe</a>
+  <script>
+  (function(d,s) { 
+    if(!d.getElementById('rwgps-sdk')) {
+      var el = d.getElementsByTagName(s)[0],
+          js = d.createElement(s);
+      js.id = 'rwgps-sdk';
+      js.src = "//ridewithgps.com/javascripts/sdk.js?1462326933014";
+      el.parentNode.insertBefore(js, el);
+    }
+  })(document, 'script');
+  </script>
 </aside>
 </div>
 
