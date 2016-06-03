@@ -50,13 +50,97 @@
 
   <section>
 
-    <article class="recipe">
+    <article class="code tag__cloud tag__aws tag__cloudflare ">
   		<header>
         
   			<ul>
-            <li><a href="" class="highlight--underline">Recipe</a></li>
-            <li><a href="" class="highlight--underline">Pizza</a></li>
-            <li><a href="" class="highlight--underline">Blueberry</a></li>
+            <li><a href="" class="highlight--underline filter__tag">cloud</a></li>
+            <li><a href="" class="highlight--underline filter__tag">AWS</a></li>
+            <li><a href="" class="highlight--underline filter__tag">CloudFlare</a></li>
+  			</ul>
+
+  			<h2>Amazon Web Services &amp; CloudFlare</h2>
+  			<small>Posted on 01 June 2016</small>
+
+  		</header>
+
+        <p><p>Aujourd'hui, petit billet en français pour partager une méthode fort pratique et abordable pour mettre en ligne des sites statiques avec Amazon Web Services (AWS) et CloudFlare.</p>
+<blockquote><p>Petit lancé de fleurs vers le brilliant <a href="https://fredericbournival.com/">Frédéric Bournival</a>, qui m'a guidé étape par étape au travers de ce processus.</p>
+</blockquote><h3>Nom de domaine</h3><p>Prenons pour acquis que vous êtes déjà le fier propriétaire d'un nom de domaine chez un <em>registrar</em>. Si ce n'est pas le cas, <code>ahbincoudon.cc</code> est <a href="https://ca.godaddy.com/domains/searchresults.aspx?checkAvail=1&domainToCheck=ahbincoudon.cc">disponible</a>.</p><h3>AWS (_ah-double-vé-ess_)</h3><p>Ensuite, pour entamer le processus, il faut un compte <a href="http://aws.amazon.com/">AWS</a>.</p><p>AWS offre ses services <a href="https://aws.amazon.com/s3/">S3</a> d'espace infonuagique gratuitement* pendant 12 mois sous le nom <em>Free Tier</em>. <em>Deal</em>.</p><p>*Quelques limites s'imposent :</p>
+<pre><code>* 5GB de _Standard Storage_
+* 20,000 requêtes _Get_
+* 2,000 requêtes _Put_
+</code></pre><p>S3, c'est leur service de stockage. On crée des <em>buckets</em> pour stocker et récupérer des <em>objets</em> dans le nuage.</p><h3>Buckets</h3>
+<pre><code>1. https://console.aws.amazon.com/console/home?region=us-east-1
+2. Sélectionner *S3*
+3. *Simple Storage Service*
+</code></pre><p>Il nous faut donc créer deux <em>buckets</em> <em>S3</em> -- un pour notre domaine et l'autre pour la redirection <code>www</code> -- dans la region la plus proche </p>
+<blockquote><p>N. Virginia, pour moi, n'est qu'à une distance négligeable de 1,149km. Par contre, une erreur de parcours a eu pour conséquence que ce site est situé en Caroline du Nord.</p>
+</blockquote>
+<pre><code>claudinebroke.it
+www.claudinebroke.it
+</code></pre><p>Ensuite, il faut sélectionner le premier <em>bucket</em> (<code>claudinebroke.it</code>) pour éditer ses <em>properties</em>. Sélectionnez <em>Static website hosting</em> et <em>Enable website hosting</em>. Ensuite, il faut lui attribuer des permissions. Dans <em>Bucket Policy</em> : </p>
+<pre><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;PublicReadForGetBucketObjects&quot;,
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Principal&quot;: &quot;*&quot;,
+      &quot;Action&quot;: &quot;s3:GetObject&quot;,
+      &quot;Resource&quot;: &quot;arn:aws:s3:::claudinebroke.it/*&quot;
+    }
+  ]
+}
+</code></pre><p>Pour le <em>bucket</em> <code>www</code>, sélectionnez <em>Redirect all requests to another host name</em>. <em>Merci bonsoir.</em></p><p>Vous pouvez dès lors accéder à votre site! E.g.</p>
+<pre><code>http://claudinebroke.it.s3-website-us-west-1.amazonaws.com/
+</code></pre><h3>SYNC avec AWSCLI</h3><p>Prochaine étape : <em>syncer</em> son contenu avec AWS. Depuis Ubuntu, on peut installer le <em>package management system</em> <code>python-pip</code>, qui nous permet d'installer <code>awscli</code> : un outil de gestion en ligne de commande pour AWS <a href="http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html">(documentation)</a>.</p>
+<pre><code>sudo apt-get update
+sudo apt-get -y install python-pip
+pip install awscli
+</code></pre>
+<blockquote><p>Dans mon cas, j'ai intégré les commandes dans mon script de <em>automated provisioning</em> de <em>Vagrant</em>.</p>
+</blockquote><p>Ensuite, il vous faut créer un utilisateur et lui attribuer une <em>key-pair</em>.</p><p>Depuis la console Web d'AWS, cliquez sur IAM - <a href="https://console.aws.amazon.com/iam/home?region=us-east-1#home">Identity &amp; Access Management</a></p><p>Créez un utilisateur. E.g. <code>s3bucketsync</code>, et laissez le système générer la valeur <em>key-pair</em>. Sauvegardez le <em>access key</em> et sélectionnez l'utilisateur nouvellement créé. </p><p>Dans <em>permission</em> :</p>
+<pre><code>attach policy
+</code></pre><p>Filtrez pour <em>s3</em> et sélectionner :</p>
+<pre><code>AmazonS3FullAccess
+</code></pre><p>Maintenant, de retour dans notre environnement Linux, on peut configurer l'outil <code>AWSCLI</code>.</p>
+<pre><code>aws configure
+AWS Access Key ID [None]: YOURSECRETID
+AWS Secret Access Key [None]: YOURSECRETKEY
+Default region name [None]: us-east-1
+Default output format [None]: json
+</code></pre><p>Ensuite, vous n'avez qu'à naviguer jusqu'au dossier que vous désirez envoyer dans les nuages et rouler cette commande :</p>
+<pre><code>aws s3 sync . s3://claudinebroke.it --region us-west-1
+</code></pre>
+<blockquote><p>Mes <em>buckets</em> ayant voyager un peu, le paramètre facultatif <code>--region</code> est utilisé pour outrepasser l'option <code>Default region name</code> désignée auparavant avec l'outil <code>AWSCLI</code>.</p>
+</blockquote><h3>CloudFlare</h3><p>Maintenant, <code>http://claudinebroke.it.s3-website-us-west-1.amazonaws.com/</code>, comme addresse Web, c'est pas simple simple à partager à vive voix dans un pub bruyant quand tu veux que tes amis ailles voir ton dernier billet de blog. Bref, il nous faut un alias, colloquialement appelé du <code>CNAME Flattening</code>, pour faire le pont entre notre addresse AWS et notre nom de domaine.</p><p><a href="https://www.cloudflare.com/">CloudFlare</a>, c'est aussi une fantastique couche de sécurité et de <em>cache</em> pour votre site Web. Pis c'est gratuit, oui oui.</p><p>Créez-vous un compte CloudFlare, puis sélectionnez <code>DNS</code>. Vous aurez de besoin, au minimum, de deux entrées :</p>
+<pre><code>CNAME (i) *Flattening* | claudinebroke.it | is an alias of claudinebroke.it.s3-website-us-west-1.amazonaws.com | Automatic | *Petit nuage transpercé d&#39;une flèche*
+CNAME | www | is an alias of claudinebroke.it | Automatic | *Petit nuage transpercé d&#39;une flèche*
+</code></pre><p>CloudFlare vous attribue ensuite des <em>nameservers</em>. E.g.</p>
+<pre><code>    sam.ns.cloudflare.com
+    eve.ns.cloudflare.com
+</code></pre><p>La dernière étape consiste à retourner chez le <em>registrar</em> -- là où vous vous êtes procuré vos noms de domaines -- pour lier les <em>nameservers</em> aux noms de domaines.</p><h3>Conclusion</h3><p>Et c'est tout! <code>claudinebroke.it</code> affiche maintenant le contenu de <code>claudinebroke.it.s3-website-us-west-1.amazonaws.com</code>.</p><p>Ça peut prendre quelques temps pour que les <code>DNS Records</code> se rafraîchissent, par contre, donc profitez de cette petite pause et marquez l'occasion avec une bonne bière!</p></p>
+
+			<footer>
+
+          <ul class="list list--inline">
+
+            <li><a href="blog/2016/site-web-aws-cloudflare.html?print=1" target="_blank" class="btn btn__article btn--light btn--xs"><i class="fa fa-print" aria-hidden="true"></i></a></li>
+
+
+            <li><a href="https://twitter.com/intent/tweet?text=Amazon Web Services & CloudFlare&url=http%3A%2F%2Fclaudinebroke.it%2Fblog%2F2016%2Fsite-web-aws-cloudflare.html&via=iheartpigeons" target="_blank" class="btn btn__profile btn--light btn--xs"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+          </ul>
+
+        </footer>
+    </article>
+    <article class="recipe tag__recipe tag__pizza tag__blueberry ">
+  		<header>
+        
+  			<ul>
+            <li><a href="" class="highlight--underline filter__tag">Recipe</a></li>
+            <li><a href="" class="highlight--underline filter__tag">Pizza</a></li>
+            <li><a href="" class="highlight--underline filter__tag">Blueberry</a></li>
   			</ul>
 
   			<h2>Favorite Pizza I</h2>
@@ -96,14 +180,14 @@
 
         </footer>
     </article>
-    <article class="code">
+    <article class="code tag__java tag__javafx tag__application tag__petit workout ">
   		<header>
         
   			<ul>
-            <li><a href="" class="highlight--underline">Java</a></li>
-            <li><a href="" class="highlight--underline">JavaFX</a></li>
-            <li><a href="" class="highlight--underline">Application</a></li>
-            <li><a href="" class="highlight--underline">Petit Workout</a></li>
+            <li><a href="" class="highlight--underline filter__tag">Java</a></li>
+            <li><a href="" class="highlight--underline filter__tag">JavaFX</a></li>
+            <li><a href="" class="highlight--underline filter__tag">Application</a></li>
+            <li><a href="" class="highlight--underline filter__tag">Petit Workout</a></li>
   			</ul>
 
   			<h2>Petit Workout - The Application</h2>
@@ -339,13 +423,13 @@ spriteAnimation = new Sprite(imageView, 4, 4, 0, 68, 64, 64);
 
         </footer>
     </article>
-    <article class="recipe">
+    <article class="recipe tag__recipe tag__grilled cheese tag__avocado ">
   		<header>
         
   			<ul>
-            <li><a href="" class="highlight--underline">Recipe</a></li>
-            <li><a href="" class="highlight--underline">Grilled Cheese</a></li>
-            <li><a href="" class="highlight--underline">Avocado</a></li>
+            <li><a href="" class="highlight--underline filter__tag">Recipe</a></li>
+            <li><a href="" class="highlight--underline filter__tag">Grilled Cheese</a></li>
+            <li><a href="" class="highlight--underline filter__tag">Avocado</a></li>
   			</ul>
 
   			<h2>Favorite Grilled Cheese III</h2>
@@ -380,14 +464,14 @@ spriteAnimation = new Sprite(imageView, 4, 4, 0, 68, 64, 64);
 
         </footer>
     </article>
-    <article class="code">
+    <article class="code tag__java tag__javafx tag__application tag__petit workout ">
   		<header>
         
   			<ul>
-            <li><a href="" class="highlight--underline">Java</a></li>
-            <li><a href="" class="highlight--underline">JavaFX</a></li>
-            <li><a href="" class="highlight--underline">Application</a></li>
-            <li><a href="" class="highlight--underline">Petit Workout</a></li>
+            <li><a href="" class="highlight--underline filter__tag">Java</a></li>
+            <li><a href="" class="highlight--underline filter__tag">JavaFX</a></li>
+            <li><a href="" class="highlight--underline filter__tag">Application</a></li>
+            <li><a href="" class="highlight--underline filter__tag">Petit Workout</a></li>
   			</ul>
 
   			<h2>Petit Workout - The Application</h2>
@@ -562,12 +646,12 @@ AnimationTimer animationTimer = new AnimationTimer() {
 
         </footer>
     </article>
-    <article class="recipe">
+    <article class="recipe tag__recipe tag__soup ">
   		<header>
         
   			<ul>
-            <li><a href="" class="highlight--underline">Recipe</a></li>
-            <li><a href="" class="highlight--underline">Soup</a></li>
+            <li><a href="" class="highlight--underline filter__tag">Recipe</a></li>
+            <li><a href="" class="highlight--underline filter__tag">Soup</a></li>
   			</ul>
 
   			<h2>Favorite Soup II</h2>
@@ -601,12 +685,12 @@ AnimationTimer animationTimer = new AnimationTimer() {
 
         </footer>
     </article>
-    <article class="code">
+    <article class="code tag__java tag__petit workout ">
   		<header>
         
   			<ul>
-            <li><a href="" class="highlight--underline">java</a></li>
-            <li><a href="" class="highlight--underline">petit workout</a></li>
+            <li><a href="" class="highlight--underline filter__tag">java</a></li>
+            <li><a href="" class="highlight--underline filter__tag">petit workout</a></li>
   			</ul>
 
   			<h2>Petit Workout Queue</h2>
@@ -787,6 +871,19 @@ Pulling: Interval{intensity=&#39;easy&#39;, duration=3000}
   </ul>
 
 </section>
+
+<section>
+<header><h4>Archives</h4></header>
+</ul>
+	<li><a href="blog/2016/site-web-aws-cloudflare.html">Amazon Web Services &amp; CloudFlare</a></li>
+	<li><a href="blog/2016/favorite-pizza-I.html">Favorite Pizza I</a></li>
+	<li><a href="blog/2016/petitworkout-III.html">Petit Workout - The Application</a></li>
+	<li><a href="blog/2016/favorite-grilled-cheese-III.html">Favorite Grilled Cheese III</a></li>
+	<li><a href="blog/2016/graphics.html">Petit Workout - The Application</a></li>
+	<li><a href="blog/2016/favorite-soup-II.html">Favorite Soup II</a></li>
+	<li><a href="blog/2016/petitworkout.html">Petit Workout Queue</a></li>
+<ul>
+</section>
         
     <blockquote class="instagram-media" data-instgrm-version="6" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:658px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);"><div style="padding:8px;"> <div style=" background:#F8F8F8; line-height:0; margin-top:40px; padding:50.0% 0; text-align:center; width:100%;"> <div style=" background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAGFBMVEUiIiI9PT0eHh4gIB4hIBkcHBwcHBwcHBydr+JQAAAACHRSTlMABA4YHyQsM5jtaMwAAADfSURBVDjL7ZVBEgMhCAQBAf//42xcNbpAqakcM0ftUmFAAIBE81IqBJdS3lS6zs3bIpB9WED3YYXFPmHRfT8sgyrCP1x8uEUxLMzNWElFOYCV6mHWWwMzdPEKHlhLw7NWJqkHc4uIZphavDzA2JPzUDsBZziNae2S6owH8xPmX8G7zzgKEOPUoYHvGz1TBCxMkd3kwNVbU0gKHkx+iZILf77IofhrY1nYFnB/lQPb79drWOyJVa/DAvg9B/rLB4cC+Nqgdz/TvBbBnr6GBReqn/nRmDgaQEej7WhonozjF+Y2I/fZou/qAAAAAElFTkSuQmCC); display:block; height:44px; margin:0 auto -44px; position:relative; top:-22px; width:44px;"></div></div><p style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;"><a href="https://www.instagram.com/p/7q2IhjDYOo/" style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none;" target="_blank">A photo posted by Clo (@iheartpigeons)</a> on <time style=" font-family:Arial,sans-serif; font-size:14px; line-height:17px;" datetime="2015-09-15T23:20:24+00:00">Sep 15, 2015 at 4:20pm PDT</time></p></div></blockquote>
   <script async defer src="//platform.instagram.com/en_US/embeds.js"></script>
@@ -816,7 +913,13 @@ Pulling: Interval{intensity=&#39;easy&#39;, duration=3000}
   </div>
     
     
-    <script>
+<script>
+
+function initElement() {
+  var tags = document.getElementsByClassName("filter__tag");
+  
+};
+
 var codeBlocks = document.querySelectorAll('pre code');
 
 for (var j = 0; j < codeBlocks.length; j++) {
@@ -854,7 +957,7 @@ function wrapLines(html)
 {
   var lines = html.split(/\n/g),
       html  = '';
-  for (var i = 0; i < lines.length; i++) {
+  for (var i = 0; i < lines.length - 1; i++) {
     html += '<span>' + lines[i] + ' </span>';
   }
   return html;

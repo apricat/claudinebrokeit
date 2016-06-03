@@ -14,12 +14,12 @@
 
     <#list posts as post>
     <#if (post.status == "published")>
-    <article class="${post.category}">
+    <article class="${post.category} <#list post.tags as tag>tag__${tag?lower_case} </#list>">
   		<header>
         
   			<ul>
 		  		<#list post.tags as tag>
-            <li><a href="" class="highlight--underline">${tag}</a></li>
+            <li><a href="" class="highlight--underline filter__tag">${tag}</a></li>
           </#list>
   			</ul>
 

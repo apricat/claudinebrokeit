@@ -6,9 +6,74 @@
     <atom:link href="http://claudinebroke.it/feed.xml" rel="self" type="application/rss+xml" />
     <description>JBake Bootstrap Template</description>
     <language>en-gb</language>
-    <pubDate>Fri, 13 May 2016 11:41:30 +0000</pubDate>
-    <lastBuildDate>Fri, 13 May 2016 11:41:30 +0000</lastBuildDate>
+    <pubDate>Fri, 3 Jun 2016 12:07:27 +0000</pubDate>
+    <lastBuildDate>Fri, 3 Jun 2016 12:07:27 +0000</lastBuildDate>
 
+    <item>
+      <title>Amazon Web Services &amp; CloudFlare</title>
+      <link>http://claudinebroke.it/blog/2016/site-web-aws-cloudflare.html</link>
+      <pubDate>Wed, 1 Jun 2016 00:00:00 +0000</pubDate>
+      <guid isPermaLink="false">blog/2016/site-web-aws-cloudflare.html</guid>
+      	<description>
+	&lt;p&gt;Aujourd&apos;hui, petit billet en français pour partager une méthode fort pratique et abordable pour mettre en ligne des sites statiques avec Amazon Web Services (AWS) et CloudFlare.&lt;/p&gt;
+&lt;blockquote&gt;&lt;p&gt;Petit lancé de fleurs vers le brilliant &lt;a href=&quot;https://fredericbournival.com/&quot;&gt;Frédéric Bournival&lt;/a&gt;, qui m&apos;a guidé étape par étape au travers de ce processus.&lt;/p&gt;
+&lt;/blockquote&gt;&lt;h3&gt;Nom de domaine&lt;/h3&gt;&lt;p&gt;Prenons pour acquis que vous êtes déjà le fier propriétaire d&apos;un nom de domaine chez un &lt;em&gt;registrar&lt;/em&gt;. Si ce n&apos;est pas le cas, &lt;code&gt;ahbincoudon.cc&lt;/code&gt; est &lt;a href=&quot;https://ca.godaddy.com/domains/searchresults.aspx?checkAvail=1&amp;domainToCheck=ahbincoudon.cc&quot;&gt;disponible&lt;/a&gt;.&lt;/p&gt;&lt;h3&gt;AWS (_ah-double-vé-ess_)&lt;/h3&gt;&lt;p&gt;Ensuite, pour entamer le processus, il faut un compte &lt;a href=&quot;http://aws.amazon.com/&quot;&gt;AWS&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;AWS offre ses services &lt;a href=&quot;https://aws.amazon.com/s3/&quot;&gt;S3&lt;/a&gt; d&apos;espace infonuagique gratuitement* pendant 12 mois sous le nom &lt;em&gt;Free Tier&lt;/em&gt;. &lt;em&gt;Deal&lt;/em&gt;.&lt;/p&gt;&lt;p&gt;*Quelques limites s&apos;imposent :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;* 5GB de _Standard Storage_
+* 20,000 requêtes _Get_
+* 2,000 requêtes _Put_
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;S3, c&apos;est leur service de stockage. On crée des &lt;em&gt;buckets&lt;/em&gt; pour stocker et récupérer des &lt;em&gt;objets&lt;/em&gt; dans le nuage.&lt;/p&gt;&lt;h3&gt;Buckets&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;1. https://console.aws.amazon.com/console/home?region=us-east-1
+2. Sélectionner *S3*
+3. *Simple Storage Service*
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Il nous faut donc créer deux &lt;em&gt;buckets&lt;/em&gt; &lt;em&gt;S3&lt;/em&gt; -- un pour notre domaine et l&apos;autre pour la redirection &lt;code&gt;www&lt;/code&gt; -- dans la region la plus proche &lt;/p&gt;
+&lt;blockquote&gt;&lt;p&gt;N. Virginia, pour moi, n&apos;est qu&apos;à une distance négligeable de 1,149km. Par contre, une erreur de parcours a eu pour conséquence que ce site est situé en Caroline du Nord.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;claudinebroke.it
+www.claudinebroke.it
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Ensuite, il faut sélectionner le premier &lt;em&gt;bucket&lt;/em&gt; (&lt;code&gt;claudinebroke.it&lt;/code&gt;) pour éditer ses &lt;em&gt;properties&lt;/em&gt;. Sélectionnez &lt;em&gt;Static website hosting&lt;/em&gt; et &lt;em&gt;Enable website hosting&lt;/em&gt;. Ensuite, il faut lui attribuer des permissions. Dans &lt;em&gt;Bucket Policy&lt;/em&gt; : &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;Version&amp;quot;: &amp;quot;2012-10-17&amp;quot;,
+  &amp;quot;Statement&amp;quot;: [
+    {
+      &amp;quot;Sid&amp;quot;: &amp;quot;PublicReadForGetBucketObjects&amp;quot;,
+      &amp;quot;Effect&amp;quot;: &amp;quot;Allow&amp;quot;,
+      &amp;quot;Principal&amp;quot;: &amp;quot;*&amp;quot;,
+      &amp;quot;Action&amp;quot;: &amp;quot;s3:GetObject&amp;quot;,
+      &amp;quot;Resource&amp;quot;: &amp;quot;arn:aws:s3:::claudinebroke.it/*&amp;quot;
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Pour le &lt;em&gt;bucket&lt;/em&gt; &lt;code&gt;www&lt;/code&gt;, sélectionnez &lt;em&gt;Redirect all requests to another host name&lt;/em&gt;. &lt;em&gt;Merci bonsoir.&lt;/em&gt;&lt;/p&gt;&lt;p&gt;Vous pouvez dès lors accéder à votre site! E.g.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;http://claudinebroke.it.s3-website-us-west-1.amazonaws.com/
+&lt;/code&gt;&lt;/pre&gt;&lt;h3&gt;SYNC avec AWSCLI&lt;/h3&gt;&lt;p&gt;Prochaine étape : &lt;em&gt;syncer&lt;/em&gt; son contenu avec AWS. Depuis Ubuntu, on peut installer le &lt;em&gt;package management system&lt;/em&gt; &lt;code&gt;python-pip&lt;/code&gt;, qui nous permet d&apos;installer &lt;code&gt;awscli&lt;/code&gt; : un outil de gestion en ligne de commande pour AWS &lt;a href=&quot;http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html&quot;&gt;(documentation)&lt;/a&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo apt-get update
+sudo apt-get -y install python-pip
+pip install awscli
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;&lt;p&gt;Dans mon cas, j&apos;ai intégré les commandes dans mon script de &lt;em&gt;automated provisioning&lt;/em&gt; de &lt;em&gt;Vagrant&lt;/em&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;&lt;p&gt;Ensuite, il vous faut créer un utilisateur et lui attribuer une &lt;em&gt;key-pair&lt;/em&gt;.&lt;/p&gt;&lt;p&gt;Depuis la console Web d&apos;AWS, cliquez sur IAM - &lt;a href=&quot;https://console.aws.amazon.com/iam/home?region=us-east-1#home&quot;&gt;Identity &amp;amp; Access Management&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Créez un utilisateur. E.g. &lt;code&gt;s3bucketsync&lt;/code&gt;, et laissez le système générer la valeur &lt;em&gt;key-pair&lt;/em&gt;. Sauvegardez le &lt;em&gt;access key&lt;/em&gt; et sélectionnez l&apos;utilisateur nouvellement créé. &lt;/p&gt;&lt;p&gt;Dans &lt;em&gt;permission&lt;/em&gt; :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;attach policy
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Filtrez pour &lt;em&gt;s3&lt;/em&gt; et sélectionner :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;AmazonS3FullAccess
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Maintenant, de retour dans notre environnement Linux, on peut configurer l&apos;outil &lt;code&gt;AWSCLI&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;aws configure
+AWS Access Key ID [None]: YOURSECRETID
+AWS Secret Access Key [None]: YOURSECRETKEY
+Default region name [None]: us-east-1
+Default output format [None]: json
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Ensuite, vous n&apos;avez qu&apos;à naviguer jusqu&apos;au dossier que vous désirez envoyer dans les nuages et rouler cette commande :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;aws s3 sync . s3://claudinebroke.it --region us-west-1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;&lt;p&gt;Mes &lt;em&gt;buckets&lt;/em&gt; ayant voyager un peu, le paramètre facultatif &lt;code&gt;--region&lt;/code&gt; est utilisé pour outrepasser l&apos;option &lt;code&gt;Default region name&lt;/code&gt; désignée auparavant avec l&apos;outil &lt;code&gt;AWSCLI&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;&lt;h3&gt;CloudFlare&lt;/h3&gt;&lt;p&gt;Maintenant, &lt;code&gt;http://claudinebroke.it.s3-website-us-west-1.amazonaws.com/&lt;/code&gt;, comme addresse Web, c&apos;est pas simple simple à partager à vive voix dans un pub bruyant quand tu veux que tes amis ailles voir ton dernier billet de blog. Bref, il nous faut un alias, colloquialement appelé du &lt;code&gt;CNAME Flattening&lt;/code&gt;, pour faire le pont entre notre addresse AWS et notre nom de domaine.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://www.cloudflare.com/&quot;&gt;CloudFlare&lt;/a&gt;, c&apos;est aussi une fantastique couche de sécurité et de &lt;em&gt;cache&lt;/em&gt; pour votre site Web. Pis c&apos;est gratuit, oui oui.&lt;/p&gt;&lt;p&gt;Créez-vous un compte CloudFlare, puis sélectionnez &lt;code&gt;DNS&lt;/code&gt;. Vous aurez de besoin, au minimum, de deux entrées :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;CNAME (i) *Flattening* | claudinebroke.it | is an alias of claudinebroke.it.s3-website-us-west-1.amazonaws.com | Automatic | *Petit nuage transpercé d&amp;#39;une flèche*
+CNAME | www | is an alias of claudinebroke.it | Automatic | *Petit nuage transpercé d&amp;#39;une flèche*
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;CloudFlare vous attribue ensuite des &lt;em&gt;nameservers&lt;/em&gt;. E.g.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    sam.ns.cloudflare.com
+    eve.ns.cloudflare.com
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;La dernière étape consiste à retourner chez le &lt;em&gt;registrar&lt;/em&gt; -- là où vous vous êtes procuré vos noms de domaines -- pour lier les &lt;em&gt;nameservers&lt;/em&gt; aux noms de domaines.&lt;/p&gt;&lt;h3&gt;Conclusion&lt;/h3&gt;&lt;p&gt;Et c&apos;est tout! &lt;code&gt;claudinebroke.it&lt;/code&gt; affiche maintenant le contenu de &lt;code&gt;claudinebroke.it.s3-website-us-west-1.amazonaws.com&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;Ça peut prendre quelques temps pour que les &lt;code&gt;DNS Records&lt;/code&gt; se rafraîchissent, par contre, donc profitez de cette petite pause et marquez l&apos;occasion avec une bonne bière!&lt;/p&gt;
+	</description>
+    </item>
     <item>
       <title>Favorite Pizza I</title>
       <link>http://claudinebroke.it/blog/2016/favorite-pizza-I.html</link>

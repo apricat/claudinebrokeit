@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Favorite Grilled Cheese III</title>
+    <title>Amazon Web Services &amp; CloudFlare</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -49,33 +49,76 @@
 	
 		<article>
 			<header>
-				<h1>Favorite Grilled Cheese III</h1>
-				<small>Posted on 01 May 2016</small>
+				<h1>Amazon Web Services &amp; CloudFlare</h1>
+				<small>Posted on 01 June 2016</small>
 			</header>
 
-			<p><p><img src="images/avocado.jpg" alt="Health Potato" title="Drawing avocadoes is hard :\""/></p><h2>Guacamole Grilled Cheese</h2><p><em>Time: 30 minutes</em><br/><em>Makes: 4 sandwiches</em></p><p>Every once in a while, you ask your partner what he/she would like for dinner and they blurt out something so weird that you just have to make it. This is what happened to me yesterday when I inquired about what we should eat and got <em>avocado grilled cheese</em> as an answer. Turns out its quite popular -- as proven by a quick internet search -- and definitely very tasty, making this one of my favorite grilled cheese recipe of all time. </p><h3>Guacamole</h3>
-<ul>
-  <li>1 avocado</li>
-  <li>1/2 roma tomato, chopped</li>
-  <li>2 tbs red onion, chopped</li>
-  <li>1 handful fresh cilantro, chopped</li>
-  <li>juice from 1 lime</li>
-  <li>salt and pepper</li>
-</ul><h3>Grilled Cheese</h3>
-<ul>
-  <li>8 slices of cheddar cheese</li>
-  <li>8 slices of whole wheat bread -- <em>I used a small loaf of Harvest Bread, which is a mix of roasted pumpkin seeds, flax seeds, sunflower seeds, millet and poppy seeds</em></li>
-  <li>butter, spread on one side of each bread slices</li>
-</ul><h3>Preparation</h3><p>Prepare guacamole first, as it takes the longest to prepare. Heat up non-stick frying pan on medium. Add 1/2 of slices of bread, butter side down. Add two slices of cheese and 1/4 of guacamole mixture on top of each slice of bread. Top with slice of bread, butter side up. Flip once the bottom slice is golden brown, and serve once both sides are roasted.</p><p><em>Beer: <em>Oktoberfest</em>, a copper lager from Les Trois Mousquetaires</em></p></p>
+			<p><p>Aujourd'hui, petit billet en français pour partager une méthode fort pratique et abordable pour mettre en ligne des sites statiques avec Amazon Web Services (AWS) et CloudFlare.</p>
+<blockquote><p>Petit lancé de fleurs vers le brilliant <a href="https://fredericbournival.com/">Frédéric Bournival</a>, qui m'a guidé étape par étape au travers de ce processus.</p>
+</blockquote><h3>Nom de domaine</h3><p>Prenons pour acquis que vous êtes déjà le fier propriétaire d'un nom de domaine chez un <em>registrar</em>. Si ce n'est pas le cas, <code>ahbincoudon.cc</code> est <a href="https://ca.godaddy.com/domains/searchresults.aspx?checkAvail=1&domainToCheck=ahbincoudon.cc">disponible</a>.</p><h3>AWS (_ah-double-vé-ess_)</h3><p>Ensuite, pour entamer le processus, il faut un compte <a href="http://aws.amazon.com/">AWS</a>.</p><p>AWS offre ses services <a href="https://aws.amazon.com/s3/">S3</a> d'espace infonuagique gratuitement* pendant 12 mois sous le nom <em>Free Tier</em>. <em>Deal</em>.</p><p>*Quelques limites s'imposent :</p>
+<pre><code>* 5GB de _Standard Storage_
+* 20,000 requêtes _Get_
+* 2,000 requêtes _Put_
+</code></pre><p>S3, c'est leur service de stockage. On crée des <em>buckets</em> pour stocker et récupérer des <em>objets</em> dans le nuage.</p><h3>Buckets</h3>
+<pre><code>1. https://console.aws.amazon.com/console/home?region=us-east-1
+2. Sélectionner *S3*
+3. *Simple Storage Service*
+</code></pre><p>Il nous faut donc créer deux <em>buckets</em> <em>S3</em> -- un pour notre domaine et l'autre pour la redirection <code>www</code> -- dans la region la plus proche </p>
+<blockquote><p>N. Virginia, pour moi, n'est qu'à une distance négligeable de 1,149km. Par contre, une erreur de parcours a eu pour conséquence que ce site est situé en Caroline du Nord.</p>
+</blockquote>
+<pre><code>claudinebroke.it
+www.claudinebroke.it
+</code></pre><p>Ensuite, il faut sélectionner le premier <em>bucket</em> (<code>claudinebroke.it</code>) pour éditer ses <em>properties</em>. Sélectionnez <em>Static website hosting</em> et <em>Enable website hosting</em>. Ensuite, il faut lui attribuer des permissions. Dans <em>Bucket Policy</em> : </p>
+<pre><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;PublicReadForGetBucketObjects&quot;,
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Principal&quot;: &quot;*&quot;,
+      &quot;Action&quot;: &quot;s3:GetObject&quot;,
+      &quot;Resource&quot;: &quot;arn:aws:s3:::claudinebroke.it/*&quot;
+    }
+  ]
+}
+</code></pre><p>Pour le <em>bucket</em> <code>www</code>, sélectionnez <em>Redirect all requests to another host name</em>. <em>Merci bonsoir.</em></p><p>Vous pouvez dès lors accéder à votre site! E.g.</p>
+<pre><code>http://claudinebroke.it.s3-website-us-west-1.amazonaws.com/
+</code></pre><h3>SYNC avec AWSCLI</h3><p>Prochaine étape : <em>syncer</em> son contenu avec AWS. Depuis Ubuntu, on peut installer le <em>package management system</em> <code>python-pip</code>, qui nous permet d'installer <code>awscli</code> : un outil de gestion en ligne de commande pour AWS <a href="http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html">(documentation)</a>.</p>
+<pre><code>sudo apt-get update
+sudo apt-get -y install python-pip
+pip install awscli
+</code></pre>
+<blockquote><p>Dans mon cas, j'ai intégré les commandes dans mon script de <em>automated provisioning</em> de <em>Vagrant</em>.</p>
+</blockquote><p>Ensuite, il vous faut créer un utilisateur et lui attribuer une <em>key-pair</em>.</p><p>Depuis la console Web d'AWS, cliquez sur IAM - <a href="https://console.aws.amazon.com/iam/home?region=us-east-1#home">Identity &amp; Access Management</a></p><p>Créez un utilisateur. E.g. <code>s3bucketsync</code>, et laissez le système générer la valeur <em>key-pair</em>. Sauvegardez le <em>access key</em> et sélectionnez l'utilisateur nouvellement créé. </p><p>Dans <em>permission</em> :</p>
+<pre><code>attach policy
+</code></pre><p>Filtrez pour <em>s3</em> et sélectionner :</p>
+<pre><code>AmazonS3FullAccess
+</code></pre><p>Maintenant, de retour dans notre environnement Linux, on peut configurer l'outil <code>AWSCLI</code>.</p>
+<pre><code>aws configure
+AWS Access Key ID [None]: YOURSECRETID
+AWS Secret Access Key [None]: YOURSECRETKEY
+Default region name [None]: us-east-1
+Default output format [None]: json
+</code></pre><p>Ensuite, vous n'avez qu'à naviguer jusqu'au dossier que vous désirez envoyer dans les nuages et rouler cette commande :</p>
+<pre><code>aws s3 sync . s3://claudinebroke.it --region us-west-1
+</code></pre>
+<blockquote><p>Mes <em>buckets</em> ayant voyager un peu, le paramètre facultatif <code>--region</code> est utilisé pour outrepasser l'option <code>Default region name</code> désignée auparavant avec l'outil <code>AWSCLI</code>.</p>
+</blockquote><h3>CloudFlare</h3><p>Maintenant, <code>http://claudinebroke.it.s3-website-us-west-1.amazonaws.com/</code>, comme addresse Web, c'est pas simple simple à partager à vive voix dans un pub bruyant quand tu veux que tes amis ailles voir ton dernier billet de blog. Bref, il nous faut un alias, colloquialement appelé du <code>CNAME Flattening</code>, pour faire le pont entre notre addresse AWS et notre nom de domaine.</p><p><a href="https://www.cloudflare.com/">CloudFlare</a>, c'est aussi une fantastique couche de sécurité et de <em>cache</em> pour votre site Web. Pis c'est gratuit, oui oui.</p><p>Créez-vous un compte CloudFlare, puis sélectionnez <code>DNS</code>. Vous aurez de besoin, au minimum, de deux entrées :</p>
+<pre><code>CNAME (i) *Flattening* | claudinebroke.it | is an alias of claudinebroke.it.s3-website-us-west-1.amazonaws.com | Automatic | *Petit nuage transpercé d&#39;une flèche*
+CNAME | www | is an alias of claudinebroke.it | Automatic | *Petit nuage transpercé d&#39;une flèche*
+</code></pre><p>CloudFlare vous attribue ensuite des <em>nameservers</em>. E.g.</p>
+<pre><code>    sam.ns.cloudflare.com
+    eve.ns.cloudflare.com
+</code></pre><p>La dernière étape consiste à retourner chez le <em>registrar</em> -- là où vous vous êtes procuré vos noms de domaines -- pour lier les <em>nameservers</em> aux noms de domaines.</p><h3>Conclusion</h3><p>Et c'est tout! <code>claudinebroke.it</code> affiche maintenant le contenu de <code>claudinebroke.it.s3-website-us-west-1.amazonaws.com</code>.</p><p>Ça peut prendre quelques temps pour que les <code>DNS Records</code> se rafraîchissent, par contre, donc profitez de cette petite pause et marquez l'occasion avec une bonne bière!</p></p>
 
 			<footer>
 
 	          <ul class="list list--inline">
 
-	            <li><a href="http://claudinebroke.it/blog/2016/favorite-grilled-cheese-III.html?print=1" class="btn btn__article btn--light btn--xs"><i class="fa fa-print" aria-hidden="true"></i></a></li>
+	            <li><a href="http://claudinebroke.it/blog/2016/site-web-aws-cloudflare.html?print=1" class="btn btn__article btn--light btn--xs"><i class="fa fa-print" aria-hidden="true"></i></a></li>
 
 
-	            <li><a href="https://twitter.com/intent/tweet?text=Favorite Grilled Cheese III&url=http%3A%2F%2Fclaudinebroke.it%2Fblog%2F2016%2Ffavorite-grilled-cheese-III.html&via=iheartpigeons" target="_blank" class="btn btn__profile btn--light btn--xs"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+	            <li><a href="https://twitter.com/intent/tweet?text=Amazon Web Services & CloudFlare&url=http%3A%2F%2Fclaudinebroke.it%2Fblog%2F2016%2Fsite-web-aws-cloudflare.html&via=iheartpigeons" target="_blank" class="btn btn__profile btn--light btn--xs"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
 	          </ul>
 
         	</footer>

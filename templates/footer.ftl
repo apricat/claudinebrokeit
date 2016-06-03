@@ -2,7 +2,13 @@
   </div>
     
     
-    <script>
+<script>
+
+function initElement() {
+  var tags = document.getElementsByClassName("filter__tag");
+  
+};
+
 var codeBlocks = document.querySelectorAll('pre code');
 
 for (var j = 0; j < codeBlocks.length; j++) {
@@ -40,7 +46,7 @@ function wrapLines(html)
 {
   var lines = html.split(/\n/g),
       html  = '';
-  for (var i = 0; i < lines.length; i++) {
+  for (var i = 0; i < lines.length - 1; i++) {
     html += '<span>' + lines[i] + ' </span>';
   }
   return html;
