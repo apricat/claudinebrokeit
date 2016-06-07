@@ -12,14 +12,20 @@
 
   <section>
 
+    <header>
+      Currently only viewing articles related to <var data-filter-bahaviour="print"></var>... <a href="" class="btn btn__reset btn--dark" data-filter-behavior="reset"><i class="fa fa-filter" aria-hidden="true"></i> Reset filters</a>
+    </header>
+
     <#list posts as post>
     <#if (post.status == "published")>
-    <article class="${post.category} <#list post.tags as tag>tag__${tag?lower_case} </#list>">
+
+    <article class="${post.category}" data-tags="<#list post.tags as tag><#assign tagName = tag?replace(' ', '')>${tagName?lower_case} </#list>">
   		<header>
         
   			<ul>
 		  		<#list post.tags as tag>
-            <li><a href="" class="highlight--underline filter__tag">${tag}</a></li>
+          <#assign tagName = tag?replace(' ', '')>
+            <li><a href="" class="highlight--underline filter__tag" data-filter="${tagName?lower_case}">${tag}</a></li>
           </#list>
   			</ul>
 

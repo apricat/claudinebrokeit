@@ -6,8 +6,8 @@
     <atom:link href="http://claudinebroke.it/feed.xml" rel="self" type="application/rss+xml" />
     <description>JBake Bootstrap Template</description>
     <language>en-gb</language>
-    <pubDate>Fri, 3 Jun 2016 12:07:27 +0000</pubDate>
-    <lastBuildDate>Fri, 3 Jun 2016 12:07:27 +0000</lastBuildDate>
+    <pubDate>Tue, 7 Jun 2016 11:37:11 +0000</pubDate>
+    <lastBuildDate>Tue, 7 Jun 2016 11:37:11 +0000</lastBuildDate>
 
     <item>
       <title>Amazon Web Services &amp; CloudFlare</title>
@@ -15,7 +15,7 @@
       <pubDate>Wed, 1 Jun 2016 00:00:00 +0000</pubDate>
       <guid isPermaLink="false">blog/2016/site-web-aws-cloudflare.html</guid>
       	<description>
-	&lt;p&gt;Aujourd&apos;hui, petit billet en français pour partager une méthode fort pratique et abordable pour mettre en ligne des sites statiques avec Amazon Web Services (AWS) et CloudFlare.&lt;/p&gt;
+	&lt;p&gt;&lt;img src=&quot;images/cloudflare-et-bucket.png&quot; alt=&quot;Bukkits&quot; title=&quot;Bukkits dans le cloud&quot;&quot;/&gt;&lt;/p&gt;&lt;p&gt;Aujourd&apos;hui, petit billet en français pour partager une méthode fort pratique et abordable pour mettre en ligne des sites statiques avec Amazon Web Services (AWS) et CloudFlare.&lt;/p&gt;
 &lt;blockquote&gt;&lt;p&gt;Petit lancé de fleurs vers le brilliant &lt;a href=&quot;https://fredericbournival.com/&quot;&gt;Frédéric Bournival&lt;/a&gt;, qui m&apos;a guidé étape par étape au travers de ce processus.&lt;/p&gt;
 &lt;/blockquote&gt;&lt;h3&gt;Nom de domaine&lt;/h3&gt;&lt;p&gt;Prenons pour acquis que vous êtes déjà le fier propriétaire d&apos;un nom de domaine chez un &lt;em&gt;registrar&lt;/em&gt;. Si ce n&apos;est pas le cas, &lt;code&gt;ahbincoudon.cc&lt;/code&gt; est &lt;a href=&quot;https://ca.godaddy.com/domains/searchresults.aspx?checkAvail=1&amp;domainToCheck=ahbincoudon.cc&quot;&gt;disponible&lt;/a&gt;.&lt;/p&gt;&lt;h3&gt;AWS (_ah-double-vé-ess_)&lt;/h3&gt;&lt;p&gt;Ensuite, pour entamer le processus, il faut un compte &lt;a href=&quot;http://aws.amazon.com/&quot;&gt;AWS&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;AWS offre ses services &lt;a href=&quot;https://aws.amazon.com/s3/&quot;&gt;S3&lt;/a&gt; d&apos;espace infonuagique gratuitement* pendant 12 mois sous le nom &lt;em&gt;Free Tier&lt;/em&gt;. &lt;em&gt;Deal&lt;/em&gt;.&lt;/p&gt;&lt;p&gt;*Quelques limites s&apos;imposent :&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;* 5GB de _Standard Storage_

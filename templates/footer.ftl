@@ -4,10 +4,61 @@
     
 <script>
 
-function initElement() {
-  var tags = document.getElementsByClassName("filter__tag");
-  
-};
+var resetBtn = document.querySelector("[data-filter-behavior='reset']");
+
+removeResetBtn();
+bindFiltering();
+
+resetBtn.onclick = function()
+{
+  removeResetBtn();
+  resetFiltering();
+
+  return false;
+}
+
+function bindFiltering()
+{
+  var tags = document.querySelectorAll("[data-filter]");
+  if (!tags) 
+    return false;
+
+  for (i = 0; i < tags.length; ++i) {
+
+    tags[i].onclick = function() {
+      showResetBtn();
+      resetFiltering();
+
+      document.querySelector("[data-filter-bahaviour='print']").innerHTML = this.getAttribute("data-filter");
+
+      var articles = document.querySelectorAll("article:not([data-tags~=" + this.getAttribute("data-filter") + "])");
+      for (i = 0; i < articles.length; ++i) {
+        articles[i].className += articles[i].className ? ' hidden' : 'hidden';
+      }
+
+      return false;
+    };
+    
+  }
+}
+
+function removeResetBtn()
+{
+  resetBtn.parentNode.classList.add("hidden");
+}
+
+function showResetBtn()
+{
+  resetBtn.parentNode.classList.remove("hidden");
+}
+
+function resetFiltering() 
+{
+    var hidden = document.querySelectorAll("article.hidden");
+    for (i = 0; i < hidden.length; ++i) {
+        hidden[i].classList.remove("hidden");
+    }
+}
 
 var codeBlocks = document.querySelectorAll('pre code');
 

@@ -6,6 +6,8 @@ tags=cloud, AWS, CloudFlare
 status=published
 ~~~~~~
 
+![Bukkits](images/cloudflare-et-bucket.png "Bukkits dans le cloud")
+
 Aujourd'hui, petit billet en français pour partager une méthode fort pratique et abordable pour mettre en ligne des sites statiques avec Amazon Web Services (AWS) et CloudFlare.
 
 > Petit lancé de fleurs vers le brilliant [Frédéric Bournival](https://fredericbournival.com/), qui m'a guidé étape par étape au travers de ce processus.
